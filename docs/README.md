@@ -6,7 +6,7 @@ This is the repository of the **Team Name** team of the [OTUS C# Developer. Prof
 
 
 
-### The project was developed by students in the course
+### The project was developed by students in the course:
 
 #### [Evgenii Chavkin](https://github.com/emc-code)
 #### [Pavel Pronin](https://github.com/proninp)
