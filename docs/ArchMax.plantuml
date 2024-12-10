@@ -1,0 +1,27 @@
+@startuml
+skinparam componentStyle rectangle
+
+actor Пользователь
+
+package Система {
+    package Frontend {
+    }
+    package Gateway {
+    }
+    package NET {
+        [UserService] as UserService
+        [EventService] as EventService
+        [PosterService] as PosterService
+        [LocationService] as LocationService
+    }
+    package DB{
+    }
+}
+
+Пользователь --> Frontend : _
+Frontend --> Gateway : REST
+Gateway --> UserService : REST
+Gateway --> EventService : REST
+Gateway --> PosterService : REST
+Gateway --> LocationService : REST
+NET --> DB : EFCore
