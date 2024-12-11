@@ -1,0 +1,6 @@
+@Afisha.Web_HostAddress = http://localhost:5182
+
+GET {{Afisha.Web_HostAddress}}/usersomeaction/
+Accept: application/json
+
+###
