@@ -3,4 +3,7 @@
 GET {{Afisha.Web_HostAddress}}/usersomeaction/
 Accept: application/json
 
+GET {{Afisha.Web_HostAddress}}/usersomeaction/
+Accept: application/json
+
 ###
