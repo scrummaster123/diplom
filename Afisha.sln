@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34714.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Afisha.Web", "src\Afisha.Web\Afisha.Web.csproj", "{7ED9CBEA-1A62-42FE-AFDF-9B0BFCEB394C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Afisha.Domain", "src\Afisha.Domain\Afisha.Domain.csproj", "{F319BEE1-409B-4761-A9CD-1C7D35554495}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Afisha.Application", "src\Afisha.Application\Afisha.Application.csproj", "{C3D1EF7E-6B4E-4802-ACA8-E657FE9336CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Afisha.Infrastructure", "src\Afisha.Infrastructure\Afisha.Infrastructure.csproj", "{52205B14-59CD-4E43-98FD-7AA454F6D8D0}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7ED9CBEA-1A62-42FE-AFDF-9B0BFCEB394C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7ED9CBEA-1A62-42FE-AFDF-9B0BFCEB394C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7ED9CBEA-1A62-42FE-AFDF-9B0BFCEB394C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7ED9CBEA-1A62-42FE-AFDF-9B0BFCEB394C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F319BEE1-409B-4761-A9CD-1C7D35554495}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F319BEE1-409B-4761-A9CD-1C7D35554495}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F319BEE1-409B-4761-A9CD-1C7D35554495}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F319BEE1-409B-4761-A9CD-1C7D35554495}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C3D1EF7E-6B4E-4802-ACA8-E657FE9336CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D1EF7E-6B4E-4802-ACA8-E657FE9336CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C3D1EF7E-6B4E-4802-ACA8-E657FE9336CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D1EF7E-6B4E-4802-ACA8-E657FE9336CF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{52205B14-59CD-4E43-98FD-7AA454F6D8D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{52205B14-59CD-4E43-98FD-7AA454F6D8D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{52205B14-59CD-4E43-98FD-7AA454F6D8D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{52205B14-59CD-4E43-98FD-7AA454F6D8D0}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FCE2BA3F-B929-42FF-80BD-5AB637027531}
+	EndGlobalSection
+EndGlobal

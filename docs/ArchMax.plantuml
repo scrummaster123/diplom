@@ -14,6 +14,9 @@ package Система {
         [PosterService] as PosterService
         [LocationService] as LocationService
     }
+    package StoreService{
+    }
+
     package DB{
     }
 }
@@ -24,4 +27,6 @@ Gateway --> UserService : REST
 Gateway --> EventService : REST
 Gateway --> PosterService : REST
 Gateway --> LocationService : REST
-NET --> DB : EFCore
+NET --> StoreService : REST
+StoreService --> DB : EFCore
+@enduml
