@@ -35,7 +35,7 @@ public static class ConfigureCoreServices
         {
             context.UseNpgsql(connectionString, opt =>
             {
-                opt.MigrationsAssembly("Afisha.Web");
+                opt.MigrationsAssembly("Afisha.Infrastructure");
                 opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             });
 #if DEBUG
