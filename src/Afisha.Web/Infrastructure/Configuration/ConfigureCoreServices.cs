@@ -2,6 +2,7 @@
 using Afisha.Application.Services;
 using Afisha.Domain;
 using Afisha.Domain.Contracts;
+using Afisha.Infrastructure;
 using Afisha.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 

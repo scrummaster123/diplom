@@ -1,7 +1,7 @@
 using Afisha.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Afisha.Domain;
+namespace Afisha.Infrastructure;
 
 public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbContext(options)
 {

@@ -10,8 +10,4 @@
         <ProjectReference Include="..\Afisha.Domain\Afisha.Domain.csproj"/>
     </ItemGroup>
 
-    <ItemGroup>
-
-    </ItemGroup>
-
 </Project>
