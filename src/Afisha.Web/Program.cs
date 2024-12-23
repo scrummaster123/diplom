@@ -1,6 +1,9 @@
+using System.Reflection;
 using Afisha.Domain;
 using Afisha.Web.Infrastructure.Configuration;
+using Asp.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,34 +12,36 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddCoreServices();
 builder.Services.AddControllers();
 
-var pgsqlHost = builder.Configuration.GetValue<string>("Postgres:Host");
-var pgsqlPort = builder.Configuration.GetValue<string>("Postgres:Port");
-var pgsqlUser = builder.Configuration.GetValue<string>("Postgres:User");
-var pgsqlPassword = builder.Configuration.GetValue<string>("Postgres:Password");
-var pgsqlDb = builder.Configuration.GetValue<string>("Postgres:Database");
+// Добавление Postgresql
+builder.AddPostgres();
 
-// Формирование строки с данными для подключения к БД
-var connectionString =
-    $"Host={pgsqlHost};Port={pgsqlPort};Database={pgsqlDb};Username={pgsqlUser};Password={pgsqlPassword};";
 
-// Конфигурация подключения к БД ( DB context )
-builder.Services.AddDbContext<AfishaDbContext>(context =>
+builder.Services.AddApiVersioning(options =>
 {
-    context.UseNpgsql(connectionString, opt =>
-    {
-        opt.MigrationsAssembly("Afisha.Domain");
-        opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
-    });
-    
-#if DEBUG
-    context.EnableSensitiveDataLogging();
-    context.EnableDetailedErrors();
-#endif
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.ReportApiVersions = true;
+});
+
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Afisha API", Version = "v1" });
+
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    //options.IncludeXmlComments(xmlPath);
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "Afisha API v1");
+    options.RoutePrefix = string.Empty; // Set the Swagger UI at the root URL
+});
 
 app.UseHttpsRedirection();
 

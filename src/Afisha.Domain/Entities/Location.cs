@@ -14,7 +14,7 @@ public class Location: EntityBase<long>
     /// </summary>
     [MaxLength(140)]
     public required string Name { get; set; }
-    
+
     /// <summary>
     ///     Стоимость для проведения. Default = 0. Проведение бесплатное
     /// </summary>
