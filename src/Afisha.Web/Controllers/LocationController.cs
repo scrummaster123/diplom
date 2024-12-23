@@ -8,7 +8,6 @@ namespace Afisha.Web.Controllers;
 [Route("[controller]")]
 public class LocationController(ILocationService locationService) : ControllerBase
 {
-
     [HttpGet]
     public async Task<Location> Get([FromQuery] long id)
     {
@@ -21,7 +20,7 @@ public class LocationController(ILocationService locationService) : ControllerBa
     {
         //TODO Нужно будет добавить в инфрасруктуру какой-нибудь сервис-экстрактор токена
         var ownerId = newLocation.Owner.Id;
-        
+
         var result = await locationService.CreateLocation(newLocation, ownerId, HttpContext.RequestAborted);
         return result;
     }

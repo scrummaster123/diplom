@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Afisha.Domain.Entities;
 
-public class Location: EntityBase<long>
+public class Location : EntityBase<long>
 {
     /// <summary>
     ///     Владелец площадки
     /// </summary>
     public required User Owner { get; set; }
-    
+
     /// <summary>
     ///     Наименование площадки
     /// </summary>
@@ -19,9 +19,10 @@ public class Location: EntityBase<long>
     ///     Стоимость для проведения. Default = 0. Проведение бесплатное
     /// </summary>
     public decimal Pricing { get; set; }
-    
+
     /// <summary>
-    ///     Является ли площадка для проведения помещением (кафе, дом, актовый зал), или нет (заповедник, лес, просто открытая зона)
+    ///     Является ли площадка для проведения помещением (кафе, дом, актовый зал), или нет (заповедник, лес, просто открытая
+    ///     зона)
     /// </summary>
     public bool IsWarmPlace { get; set; }
 }
