@@ -2,8 +2,8 @@
 using Afisha.Application.Services;
 using Afisha.Domain;
 using Afisha.Domain.Contracts;
-using Afisha.Infrastructure;
-using Afisha.Infrastructure.Repositories;
+using Afisha.Infrastructure.Data;
+using Afisha.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Web.Infrastructure.Configuration;

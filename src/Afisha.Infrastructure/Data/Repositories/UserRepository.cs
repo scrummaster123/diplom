@@ -1,5 +1,6 @@
 ﻿using Afisha.Application.Contracts.Repositories;
 using Afisha.Domain.Entities;
+using Afisha.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Infrastructure.Repositories
@@ -12,7 +13,7 @@ namespace Afisha.Infrastructure.Repositories
         public async Task<User?> AddUserAsync(User user, CancellationToken cancellationToken)
         {
             // Поиск логина в бд , для создания пользователя нужен уникальный логин (?)
-            var result = await context.Users.FirstOrDefaultAsync(x => x.Login == user.Login);
+            var result = await context.Users.FirstOrDefaultAsync(x => x.UserName == user.UserName);
             if (result is not null)
             {
                 throw new Exception("Пользователь с таким логином уже существует");

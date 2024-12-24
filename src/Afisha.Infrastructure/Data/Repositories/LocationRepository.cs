@@ -3,7 +3,7 @@ using Afisha.Domain;
 using Afisha.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace Afisha.Infrastructure.Repositories;
+namespace Afisha.Infrastructure.Data.Repositories;
 
 public class LocationRepository(AfishaDbContext context) : ILocationRepository
 {
