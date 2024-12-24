@@ -2,6 +2,7 @@
 using Afisha.Application.Services;
 using Afisha.Domain;
 using Afisha.Domain.Contracts;
+using Afisha.Infrastructure;
 using Afisha.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -34,7 +35,7 @@ public static class ConfigureCoreServices
         {
             context.UseNpgsql(connectionString, opt =>
             {
-                opt.MigrationsAssembly("Afisha.Web");
+                opt.MigrationsAssembly("Afisha.Infrastructure");
                 opt.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
             });
 #if DEBUG

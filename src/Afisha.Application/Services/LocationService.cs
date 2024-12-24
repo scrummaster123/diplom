@@ -1,11 +1,10 @@
 using Afisha.Application.Contracts.Repositories;
-using Afisha.Domain;
 using Afisha.Domain.Contracts;
 using Afisha.Domain.Entities;
 
 namespace Afisha.Application.Services;
 
-public class LocationService(AfishaDbContext context, ILocationRepository locationRepository) : ILocationService
+public class LocationService(ILocationRepository locationRepository) : ILocationService
 {
     /// <summary>
     ///     Получение общей информации о локации по идентификатору
