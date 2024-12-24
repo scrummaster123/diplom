@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Afisha.Domain.Entities.Abstractions;
 
 namespace Afisha.Domain.Entities;
 
@@ -25,4 +26,9 @@ public class Location : EntityBase<long>
     ///     зона)
     /// </summary>
     public bool IsWarmPlace { get; set; }
+
+    /// <summary>
+    /// Коллекция Location-Event
+    /// </summary>
+    public ICollection<LocationEvent> LocationEvents { get; set; } = Array.Empty<LocationEvent>();
 }
