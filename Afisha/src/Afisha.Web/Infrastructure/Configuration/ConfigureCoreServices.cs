@@ -1,6 +1,6 @@
-﻿using Afisha.Application.Contracts.Repositories;
+﻿using Afisha.Application.Abstractions;
+using Afisha.Application.Contracts.Repositories;
 using Afisha.Application.Services;
-using Afisha.Domain;
 using Afisha.Domain.Contracts;
 using Afisha.Infrastructure.Data;
 using Afisha.Infrastructure.Data.Repositories;

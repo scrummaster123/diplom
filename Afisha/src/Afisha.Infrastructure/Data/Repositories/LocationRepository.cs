@@ -1,5 +1,4 @@
 using Afisha.Application.Contracts.Repositories;
-using Afisha.Domain;
 using Afisha.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 

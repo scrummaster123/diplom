@@ -1,6 +1,5 @@
-﻿using Afisha.Domain.Contracts;
+﻿using Afisha.Application.Abstractions;
 using Afisha.Domain.Entities;
-using Afisha.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Afisha.Web.Controllers

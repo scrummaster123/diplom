@@ -5,11 +5,6 @@ namespace Afisha.Domain.Entities
     public class User : EntityBase<long>
     {
         /// <summary>
-        /// Идентификатор пользователя
-        /// </summary>
-        public long Id { get; set; }    //Здесь можно использовать guid или int например
-
-        /// <summary>
         /// Имя пользователя
         /// </summary>
         public string FirstName { get; set; }
@@ -22,7 +17,7 @@ namespace Afisha.Domain.Entities
         /// <summary>
         /// Отчество пользователя (необязательное поле)
         /// </summary>
-        public string? SurName { get; set; }
+        public string? Patronymic { get; set; }
 
         /// <summary>
         /// Адрес электронной почты 
