@@ -1,6 +1,6 @@
 ﻿using Afisha.Domain.Entities;
 
-namespace Afisha.Application.Contracts
+namespace Afisha.Application.Abstractions
 {
     public interface IUserNotificationSender
     {

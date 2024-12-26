@@ -17,6 +17,6 @@ namespace Afisha.Domain.Contracts
         /// <summary>
         /// Удаление пользователя 
         /// </summary>
-        Task<bool> DeleteUserAsync(long id, CancellationToken cancellationToken)
+        Task<bool> DeleteUserAsync(long id, CancellationToken cancellationToken);
     }
 }

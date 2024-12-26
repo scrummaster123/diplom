@@ -1,4 +1,5 @@
-﻿using Afisha.Domain.Contracts;
+﻿using Afisha.Application.Abstractions;
+using Afisha.Domain.Contracts;
 using Afisha.Domain.Entities;
 
 namespace Afisha.Application.Services
@@ -9,7 +10,7 @@ namespace Afisha.Application.Services
         public async Task<User> SomeActionAsync()
         {
             await Task.Delay(1);
-            return new User {Id = 1, UserName = "TEST" };
+            return new User {Id = 1, FirstName = "TEST" };
         }
     }
 }
