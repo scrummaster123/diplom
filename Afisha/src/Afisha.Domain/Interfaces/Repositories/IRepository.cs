@@ -11,5 +11,5 @@ public interface IRepository<T, TKey> : IReadRepository<T, TKey>
 
     void Delete(T item);
 
-    Task Delete(TKey id, CancellationToken cancellationToken);
+    Task DeleteAsync(TKey id, CancellationToken cancellationToken);
 }

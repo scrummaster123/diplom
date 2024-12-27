@@ -19,34 +19,76 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
         _dbSet = _context.Set<T>();
     }
 
-    public Task<T[]> Get(
+    /// <summary>
+    /// Получает <see cref="{T}[]"/> основываясь на predicate, include, orderBy делегатах. По-умолчанию работает, как no-tracking запрос.
+    /// </summary>
+    /// <param name="predicate">Функция проверки соответствия каждого элемента условию выборки</param>
+    /// <param name="include">Функция для включения навигационных свойств</param>
+    /// <param name="orderBy">Функция сортировки элементов</param>
+    /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="predicate"/></returns>
+    public Task<T[]> GetAsync(
         Expression<Func<T, bool>>? predicate = null,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
         Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
         TrackingType trackingType = TrackingType.NoTracking,
         CancellationToken cancellationToken = default)
     {
-        var query = GetQuery(trackingType);
-
-        if (include is not null)
-            query = include(query);
-
-        if (predicate is not null)
-            query = query.Where(predicate);
-
-        if (orderBy is not null)
-            query = orderBy(query);
-
+        var query = BuildQueryable(predicate, include, orderBy, trackingType);
         return query.ToArrayAsync(cancellationToken);
     }
 
-    public Task<T?> GetById(
+    /// <summary>
+    /// Получает <see cref="{T}[]"/> основываясь на predicate, include, orderBy делегатах и пагинации. По-умолчанию работает, как no-tracking запрос.
+    /// </summary>
+    /// <param name="predicate">Функция проверки соответствия каждого элемента условию выборки</param>
+    /// <param name="include">Функция для включения навигационных свойств</param>
+    /// <param name="orderBy">Функция сортировки элементов</param>
+    /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
+    /// <param name="pageIndex">Индекс страницы</param>
+    /// <param name="pageSize">Размер страницы</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="predicate"/></returns>
+    /// <exception cref="ArgumentException">Ошибка указания параметров пагинации запроса</exception>
+    public Task<T[]> GetPagedAsync(
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        TrackingType trackingType = TrackingType.NoTracking,
+        int pageIndex = 0,
+        int pageSize = 20,
+        CancellationToken cancellationToken = default)
+    {
+        if (pageIndex < 1)
+            throw new ArgumentException("Индекс страницы должен быть больше, либо равен 0");
+        if (pageSize < 1)
+            throw new ArgumentException("Размер страницы должен быть больше, либо равен 1");
+        int skip = pageIndex * pageSize;
+
+        var query = BuildQueryable(predicate, include, orderBy, trackingType);
+
+        return query
+            .Skip(skip)
+            .Take(pageSize)
+            .ToArrayAsync(cancellationToken);
+    }
+
+    /// <summary>
+    /// Получает <see cref="{T?}"/> основываясь Id сущности и include делегате. По-умолчанию работает, как no-tracking запрос.
+    /// </summary>
+    /// <param name="id">Id искомой сущности</param>
+    /// <param name="include">Функция для включения навигационных свойств</param>
+    /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns><see cref="{T?}"/> с Id, переданным в параметре <paramref name="id"/></returns>
+    public Task<T?> GetByIdAsync(
         TKey id,
         Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
         TrackingType trackingType = TrackingType.NoTracking,
         CancellationToken cancellationToken = default)
     {
-        var query = GetQuery(trackingType);
+        var query = GetTrackingConfiguredQuery(trackingType);
 
         if (include != null)
             query = include(query);
@@ -54,19 +96,45 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
         return query.FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
-    public async Task<T> GetByIdOrThrow(
+    /// <summary>
+    /// Получает <see cref="{T}"/> основываясь Id сущности и include делегате. По-умолчанию работает, как no-tracking запрос.
+    /// </summary>
+    /// <param name="id">Id искомой сущности</param>
+    /// <param name="include">Функция для включения навигационных свойств</param>
+    /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns><see cref="{T}"/> с Id, переданным в параметре <paramref name="id"/></returns>
+    /// <exception cref="ArgumentException">Ошибка, если элемент <see cref="{T}"/> не найден</exception>
+    public async Task<T> GetByIdOrThrowAsync(
     TKey id,
     Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
     TrackingType trackingType = TrackingType.NoTracking,
     CancellationToken cancellationToken = default)
     {
-        var entity = await GetById(id, include, trackingType, cancellationToken);
+        var entity = await GetByIdAsync(id, include, trackingType, cancellationToken);
         if (entity is null)
             throw new ArgumentException($"Запись {typeof(T).Name} с id:'{id}' не была найдена.");
         return entity;
     }
 
-    private IQueryable<T> GetQuery(TrackingType trackingType) =>
+    private IQueryable<T> BuildQueryable(
+        Expression<Func<T, bool>>? predicate = null,
+        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
+        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+        TrackingType trackingType = TrackingType.NoTracking)
+    {
+        var query = GetTrackingConfiguredQuery(trackingType);
+
+        if (include is not null)
+            query = include(query);
+
+        if (predicate is not null)
+            query = query.Where(predicate);
+
+        return orderBy is null ? query : orderBy(query);
+    }
+
+    private IQueryable<T> GetTrackingConfiguredQuery(TrackingType trackingType) =>
         trackingType switch
         {
             TrackingType.NoTracking => _dbSet.AsNoTracking(),
