@@ -1,5 +1,4 @@
-﻿using Afisha.Application.Abstractions;
-using Afisha.Domain.Contracts;
+﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities;
 
 namespace Afisha.Application.Services

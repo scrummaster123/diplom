@@ -1,7 +1,7 @@
-﻿using Afisha.Application.Abstractions;
-using Afisha.Application.Contracts.Repositories;
-using Afisha.Application.Services;
-using Afisha.Domain.Contracts;
+﻿using Afisha.Application.Services.Interfaces;
+using Afisha.Application.Services.Managers;
+using Afisha.Domain.Interfaces;
+using Afisha.Domain.Interfaces.Repositories;
 using Afisha.Infrastructure.Data;
 using Afisha.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +12,10 @@ public static class ConfigureCoreServices
 {
     public static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
-        services.AddSingleton<IUserSomeActionService, UserSomeActionService>();
-        services.AddTransient<ILocationService, LocationService>();
-        services.AddTransient<ILocationRepository, LocationRepository>();
+        services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
+        services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
+        services.AddScoped<ILocationService, LocationService>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 
@@ -31,7 +32,7 @@ public static class ConfigureCoreServices
             $"Host={pgsqlHost};Port={pgsqlPort};Database={pgsqlDb};Username={pgsqlUser};Password={pgsqlPassword};";
 
         // Конфигурация подключения к БД ( DB context )
-        builder.Services.AddDbContext<AfishaDbContext>(context =>
+        builder.Services.AddDbContext<IUnitOfWork, AfishaDbContext>(context =>
         {
             context.UseNpgsql(connectionString, opt =>
             {

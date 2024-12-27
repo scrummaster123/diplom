@@ -15,7 +15,7 @@ public class Repository<T, TKey> :
     /// Добавление элемента <see cref="{T}"/> в репозиторий
     /// </summary>
     /// <param name="item">Добавляемая сущность</param>
-    /// <returns></returns>
+    /// <returns>Добавленная сущность <see cref="{T}"/></returns>
     public T Add(T item)
     {
         var addResult = _context.Add(item);
