@@ -1,9 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using Afisha.Application.Contracts.Specifications;
 using Afisha.Domain.Entities.Abstractions;
 using Afisha.Domain.Enums;
 using Afisha.Domain.Interfaces.Repositories;
+using Afisha.Domain.Interfaces.Specifications;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 
 namespace Afisha.Infrastructure.Data.Repositories;
 public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
@@ -20,55 +20,39 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
     }
 
     /// <summary>
-    /// Получает <see cref="{T}[]"/> основываясь на predicate, include, orderBy делегатах. По-умолчанию работает, как no-tracking запрос.
+    /// Получает <see cref="{T}[]"/> основываясь на спецификации. По-умолчанию работает, как no-tracking запрос.
     /// </summary>
-    /// <param name="predicate">Функция проверки соответствия каждого элемента условию выборки</param>
-    /// <param name="include">Функция для включения навигационных свойств</param>
-    /// <param name="orderBy">Функция сортировки элементов</param>
+    /// <param name="specification">Спецификация</param>
     /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
     /// <param name="cancellationToken">Токен отмены</param>
-    /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="predicate"/></returns>
-    public Task<T[]> GetAsync(
-        Expression<Func<T, bool>>? predicate = null,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        TrackingType trackingType = TrackingType.NoTracking,
-        CancellationToken cancellationToken = default)
+    /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="specification"/></returns>
+    public async Task<T[]> GetAsync(ISpecification<T> specification, TrackingType trackingType = TrackingType.NoTracking, CancellationToken cancellationToken = default)
     {
-        var query = BuildQueryable(predicate, include, orderBy, trackingType);
-        return query.ToArrayAsync(cancellationToken);
+        var query = specification.BuildQueryable(GetTrackingConfiguredQuery(trackingType));
+        return await query.ToArrayAsync(cancellationToken);
     }
 
     /// <summary>
-    /// Получает <see cref="{T}[]"/> основываясь на predicate, include, orderBy делегатах и пагинации. По-умолчанию работает, как no-tracking запрос.
+    /// Получает <see cref="{T}[]"/> основываясь на спецификации и пагинации. По-умолчанию работает, как no-tracking запрос.
     /// </summary>
-    /// <param name="predicate">Функция проверки соответствия каждого элемента условию выборки</param>
-    /// <param name="include">Функция для включения навигационных свойств</param>
-    /// <param name="orderBy">Функция сортировки элементов</param>
+    /// <param name="specification">Спецификация</param>
     /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
     /// <param name="pageIndex">Индекс страницы</param>
     /// <param name="pageSize">Размер страницы</param>
     /// <param name="cancellationToken">Токен отмены</param>
-    /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="predicate"/></returns>
+    /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="specification"/></returns>
     /// <exception cref="ArgumentException">Ошибка указания параметров пагинации запроса</exception>
-    public Task<T[]> GetPagedAsync(
-        Expression<Func<T, bool>>? predicate = null,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        TrackingType trackingType = TrackingType.NoTracking,
-        int pageIndex = 0,
-        int pageSize = 20,
-        CancellationToken cancellationToken = default)
+    public async Task<T[]> GetPagedAsync(ISpecification<T> specification, TrackingType trackingType = TrackingType.NoTracking, int pageIndex = 0, int pageSize = 20, CancellationToken cancellationToken = default)
     {
-        if (pageIndex < 1)
+        if (pageIndex < 0)
             throw new ArgumentException("Индекс страницы должен быть больше, либо равен 0");
         if (pageSize < 1)
             throw new ArgumentException("Размер страницы должен быть больше, либо равен 1");
         int skip = pageIndex * pageSize;
 
-        var query = BuildQueryable(predicate, include, orderBy, trackingType);
+        var query = specification.BuildQueryable(GetTrackingConfiguredQuery(trackingType));
 
-        return query
+        return await query
             .Skip(skip)
             .Take(pageSize)
             .ToArrayAsync(cancellationToken);
@@ -78,68 +62,41 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
     /// Получает <see cref="{T?}"/> основываясь Id сущности и include делегате. По-умолчанию работает, как no-tracking запрос.
     /// </summary>
     /// <param name="id">Id искомой сущности</param>
-    /// <param name="include">Функция для включения навигационных свойств</param>
+    /// <param name="specification">Спецификация</param>
     /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns><see cref="{T?}"/> с Id, переданным в параметре <paramref name="id"/></returns>
-    public Task<T?> GetByIdAsync(
-        TKey id,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        TrackingType trackingType = TrackingType.NoTracking,
-        CancellationToken cancellationToken = default)
+    public async Task<T?> GetByIdAsync(TKey id, IIncludeSpecification<T>? specification = null, TrackingType trackingType = TrackingType.NoTracking, CancellationToken cancellationToken = default)
     {
         var query = GetTrackingConfiguredQuery(trackingType);
-
-        if (include != null)
-            query = include(query);
-
-        return query.FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
+        if (specification != null)
+            query = specification.BuildQueryable(query);
+        return await query.FirstOrDefaultAsync(e => e.Id.Equals(id), cancellationToken);
     }
 
     /// <summary>
-    /// Получает <see cref="{T}"/> основываясь Id сущности и include делегате. По-умолчанию работает, как no-tracking запрос.
+    /// Получает <see cref="{T}"/> основываясь Id сущности и спецификации. По-умолчанию работает, как no-tracking запрос.
     /// </summary>
     /// <param name="id">Id искомой сущности</param>
-    /// <param name="include">Функция для включения навигационных свойств</param>
+    /// <param name="specification">Спецификация</param>
     /// <param name="trackingType"><c>NoTracking</c> для отключения кеширования; <c>Tracking</c> для включения кеширования; <c>NoTrackingWithIdentityResolution</c> для отключения кеширования, но с вычислением одинаковых сущностей в результате запроса</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns><see cref="{T}"/> с Id, переданным в параметре <paramref name="id"/></returns>
     /// <exception cref="ArgumentException">Ошибка, если элемент <see cref="{T}"/> не найден</exception>
-    public async Task<T> GetByIdOrThrowAsync(
-    TKey id,
-    Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-    TrackingType trackingType = TrackingType.NoTracking,
-    CancellationToken cancellationToken = default)
+    public async Task<T> GetByIdOrThrowAsync(TKey id, IIncludeSpecification<T>? specification = null, TrackingType trackingType = TrackingType.NoTracking, CancellationToken cancellationToken = default)
     {
-        var entity = await GetByIdAsync(id, include, trackingType, cancellationToken);
+        var entity = await GetByIdAsync(id, specification, trackingType, cancellationToken);
         if (entity is null)
             throw new ArgumentException($"Запись {typeof(T).Name} с id:'{id}' не была найдена.");
         return entity;
     }
 
-    private IQueryable<T> BuildQueryable(
-        Expression<Func<T, bool>>? predicate = null,
-        Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
-        Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
-        TrackingType trackingType = TrackingType.NoTracking)
-    {
-        var query = GetTrackingConfiguredQuery(trackingType);
-
-        if (include is not null)
-            query = include(query);
-
-        if (predicate is not null)
-            query = query.Where(predicate);
-
-        return orderBy is null ? query : orderBy(query);
-    }
-
     private IQueryable<T> GetTrackingConfiguredQuery(TrackingType trackingType) =>
-        trackingType switch
-        {
-            TrackingType.NoTracking => _dbSet.AsNoTracking(),
-            TrackingType.NoTrackingWithIdentityResolution => _dbSet.AsNoTrackingWithIdentityResolution(),
-            TrackingType.Tracking => _dbSet,
-            _ => throw new ArgumentOutOfRangeException(nameof(trackingType), trackingType, null)
-        };
+    trackingType switch
+    {
+        TrackingType.NoTracking => _dbSet.AsNoTracking(),
+        TrackingType.NoTrackingWithIdentityResolution => _dbSet.AsNoTrackingWithIdentityResolution(),
+        TrackingType.Tracking => _dbSet,
+        _ => throw new ArgumentOutOfRangeException(nameof(trackingType), trackingType, null)
+    };
 }

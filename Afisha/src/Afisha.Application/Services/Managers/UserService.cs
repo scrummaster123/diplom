@@ -1,4 +1,5 @@
 ﻿using Afisha.Application.Services.Interfaces;
+using Afisha.Application.Specifications.User;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
@@ -14,7 +15,7 @@ namespace Afisha.Application.Services.Managers
         /// </summary>
         public async Task<User> AddUserAsync(User user, CancellationToken cancellationToken)
         {
-            var existingUser = await userRepository.GetAsync(u => u.Login == user.Login, cancellationToken: cancellationToken);
+            var existingUser = await userRepository.GetAsync(new UserByLoginSpecification(user.Login), cancellationToken: cancellationToken);
             if (existingUser is not null)
                 throw new Exception("Пользователь с таким логином уже существует");
 

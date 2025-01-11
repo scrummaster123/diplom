@@ -1,8 +1,8 @@
 using Afisha.Application.Services.Interfaces;
+using Afisha.Application.Specifications.Location;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
-using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Application.Services.Managers;
 
@@ -18,7 +18,7 @@ public class LocationService(
     {
         var location = await locationRepository.GetByIdAsync(
             id,
-            include: q => q.Include(l => l.Owner),
+            new LocationWithOwnerSpecification(),
             cancellationToken: cancellationToken);
 
         if (location == null)
