@@ -26,6 +26,8 @@ public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbCont
     /// </summary>
     public DbSet<LocationEvent> LocationEvents => Set<LocationEvent>();
 
+    public DbSet<Rating> Ratings => Set<Rating>();
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AfishaDbContext).Assembly);
