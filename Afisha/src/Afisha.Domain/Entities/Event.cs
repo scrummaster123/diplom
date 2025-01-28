@@ -5,27 +5,28 @@ namespace Afisha.Domain.Entities;
 public class Event : EntityBase<long>
 {
     /// <summary>
-    /// Владелец мероприятия
+    /// Id пользователя - владельца мероприятия
     /// </summary>
     public long SponsorId { get; set; }
 
     /// <summary>
-    /// Место проведения мероприятия
+    /// Владелец мероприятия
+    /// </summary>
+    public User Sponsor { get; set; }
+
+    /// <summary>
+    /// Id места проведения мероприятия
     /// </summary>
     public long LocationId { get; set; }
 
     /// <summary>
-    /// Ссылка на пользователя - владельца мероприятия
+    /// Место проведения мероприятия
     /// </summary>
-    public User Sponsor { get; set; }
+    public Location Location { get; set; }
 
     /// <summary>
     /// Дата начала мероприятия
     /// </summary>
     public DateOnly DateStart { get; set; }
-
-    /// <summary>
-    /// Коллекция Location-Event
-    /// </summary>
-    public ICollection<LocationEvent> LocationEvents { get; set; } = Array.Empty<LocationEvent>();
+   
 }

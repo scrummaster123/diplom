@@ -1,0 +1,6 @@
+0. dotnet tool install --global dotnet-ef
+1. Создать миграцию:
+dotnet ef migrations add InitialCreate --project src\Afisha.Infrastructure --startup-project src\Afisha.Web --context AfishaDbContext -v -o Data\Migrations -c Debug
+2. Применить миграцию к БД:
+dotnet ef database update --project src\Afisha.Infrastructure --startup-project src\Afisha.Web --context AfishaDbContext -c Debug
+
