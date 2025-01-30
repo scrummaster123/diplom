@@ -8,6 +8,10 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Afisha.Application\Afisha.Application.csproj"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.11">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
 
 </Project>

@@ -7,37 +7,37 @@ namespace Afisha.Domain.Entities
         /// <summary>
         /// Имя пользователя
         /// </summary>
-        public string FirstName { get; set; }
+        public string FirstName { get; set; } = "";
 
         /// <summary>
         /// Фамилия пользователя
         /// </summary>
-        public string LastName { get; set; }
+        public string LastName { get; set; } = "";
 
         /// <summary>
         /// Отчество пользователя (необязательное поле)
         /// </summary>
-        public string? Patronymic { get; set; }
+        public string? Patronymic { get; set; } = "";
 
         /// <summary>
         /// Адрес электронной почты 
         /// </summary>
-        public string Email { get; set; }
+        public string Email { get; set; } = "";
 
         /// <summary>
         /// Логин для входа в аккаунт
         /// </summary>
-        public string Login { get; set; }
+        public string Login { get; set; } = "";
 
         /// <summary>
         /// Хешированный пароль
         /// </summary>
-        public string PasswordHash { get; set; }
+        public string PasswordHash { get; set; } = "";
 
         /// <summary>
         /// Дата рождения пользователя (необязательное поле)
         /// </summary>
-        public DateTime? Birthday { get; set; }
+        public DateTime? Birthday { get; set; } = DateTime.MinValue;
 
         /// <summary>
         /// Пол пользователя (необязательное поле)

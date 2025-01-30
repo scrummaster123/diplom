@@ -1,16 +1,25 @@
+using System.Transactions;
 using Afisha.Application.Contracts.Repositories;
 using Afisha.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Afisha.Infrastructure.Data.Repositories;
 
-public class LocationRepository(AfishaDbContext context) : ILocationRepository
+public class LocationRepository(AfishaDbContext context, IServiceProvider Services) : ILocationRepository
 {
     /// <summary>
     ///     Получение локации по идентификатору
     /// </summary>
     public async Task<Location?> GetLocationByIdAsync(long id, CancellationToken cancellationToken)
     {
+        
+
+        
+        
+        
+        
+        
         var location = await context.Locations
             .Include(x => x.Owner)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -18,6 +27,18 @@ public class LocationRepository(AfishaDbContext context) : ILocationRepository
         return location;
     }
 
+
+    private async Task Delete()
+    {
+        
+        // Получение контекста базы данных из сервисов коллекций
+        await using var scope = Services.CreateAsyncScope();
+        await using var applicationContext = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
+        
+        var test = await context.Locations.FirstOrDefaultAsync();
+        context.Locations.Remove(test);
+        await context.SaveChangesAsync();
+    }
     /// <summary>
     ///     Создание новой локации
     /// </summary>

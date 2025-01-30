@@ -1,5 +1,6 @@
 using System.Reflection;
 using Afisha.Web.Infrastructure.Configuration;
+using Afisha.Web.Middleware;
 using Asp.Versioning;
 using Microsoft.OpenApi.Models;
 
@@ -29,11 +30,12 @@ builder.Services.AddSwaggerGen(options =>
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     //options.IncludeXmlComments(xmlPath);
 });
-
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Добавление глобального обработчика ошибок
+app.UseMiddleware<GlobalExceptionHandler>();
 
+// Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
