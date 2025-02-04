@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Afisha.Domain.Entities.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Afisha.Domain.Entities;
 
@@ -35,6 +36,6 @@ public class Location : EntityBase<long>
     /// <summary>
     /// События локации
     /// </summary>
-    public ICollection<Event> Events { get; set; } = Array.Empty<Event>();
+    public ICollection<Event> Events { get; set; } = new List<Event>();
 
 }
