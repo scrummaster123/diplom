@@ -1,14 +1,20 @@
 using System.ComponentModel.DataAnnotations;
 using Afisha.Domain.Entities.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Afisha.Domain.Entities;
 
 public class Location : EntityBase<long>
 {
     /// <summary>
+    ///     Id владелца площадки
+    /// </summary>
+    public long OwnerId { get; set; }
+
+    /// <summary>
     ///     Владелец площадки
     /// </summary>
-    public required User Owner { get; set; }
+    public User Owner { get; set; }
 
     /// <summary>
     ///     Наименование площадки
@@ -28,7 +34,8 @@ public class Location : EntityBase<long>
     public bool IsWarmPlace { get; set; }
 
     /// <summary>
-    /// Коллекция Location-Event
+    /// События локации
     /// </summary>
-    public ICollection<LocationEvent> LocationEvents { get; set; } = Array.Empty<LocationEvent>();
+    public ICollection<Event> Events { get; set; } = new List<Event>();
+
 }
