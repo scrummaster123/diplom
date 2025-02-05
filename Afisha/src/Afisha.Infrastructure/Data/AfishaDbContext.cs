@@ -1,5 +1,6 @@
 using System;
 using Afisha.Domain.Entities;
+using Afisha.Infrastructure.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Infrastructure.Data;
@@ -21,15 +22,11 @@ public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbCont
     /// </summary>
     public DbSet<Event> Events => Set<Event>();
 
-    /// <summary>
-    /// Связь многие ко многим Event и Location
-    /// </summary>
-    public DbSet<LocationEvent> LocationEvents => Set<LocationEvent>();
-
     public DbSet<Rating> Ratings => Set<Rating>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(AfishaDbContext).Assembly);
+        modelBuilder.Seed();
     }
 }
