@@ -1,7 +1,6 @@
-using Afisha.Domain.Entities;
+﻿using Afisha.Domain.Entities;
 
-namespace Afisha.Domain.Contracts;
-
+namespace Afisha.Application.Services.Interfaces;
 public interface ILocationService
 {
     /// <summary>

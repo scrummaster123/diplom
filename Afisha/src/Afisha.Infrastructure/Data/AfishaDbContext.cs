@@ -1,11 +1,10 @@
-using System;
 using Afisha.Domain.Entities;
 using Afisha.Infrastructure.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Infrastructure.Data;
 
-public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbContext(options)
+public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbContext(options), IUnitOfWork
 {
     /// <summary>
     ///     Локации для проведения мероприятий
@@ -23,6 +22,16 @@ public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbCont
     public DbSet<Event> Events => Set<Event>();
 
     public DbSet<Rating> Ratings => Set<Rating>();
+
+    /// <summary>
+    /// UnitOfWork реализация
+    /// </summary>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns><see cref="{int}"/>Количество строк базы данных, на которых повлияло выполненное изменение</returns>
+    public async Task<int> CommitAsync(CancellationToken cancellationToken)
+    {
+        return await SaveChangesAsync(cancellationToken);
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
