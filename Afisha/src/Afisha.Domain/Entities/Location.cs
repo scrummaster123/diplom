@@ -36,6 +36,6 @@ public class Location : EntityBase<long>
     /// <summary>
     /// События локации
     /// </summary>
-    public ICollection<Event> Events { get; set; } = new List<Event>();
+    public ICollection<Event> Events { get; set; } = Array.Empty<Event>();
 
 }
