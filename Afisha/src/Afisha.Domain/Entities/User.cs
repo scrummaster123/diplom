@@ -44,6 +44,16 @@ namespace Afisha.Domain.Entities
         /// </summary>
         public bool? IsMale { get; set; }
         
+        /// <summary>
+        /// Локации пользователя
+        /// </summary>
+        public ICollection<Location> Locations { get; set; } = Array.Empty<Location>();
+
+        /// <summary>
+        /// События пользователя
+        /// </summary>
         public ICollection<Event> Events { get; set; } = Array.Empty<Event>();
+
+        
     }
 }
