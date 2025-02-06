@@ -15,11 +15,6 @@ public class LocationRepository(AfishaDbContext context, IServiceProvider Servic
     {
         
 
-        
-        
-        
-        
-        
         var location = await context.Locations
             .Include(x => x.Owner)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
@@ -27,18 +22,6 @@ public class LocationRepository(AfishaDbContext context, IServiceProvider Servic
         return location;
     }
 
-
-    private async Task Delete()
-    {
-        
-        // Получение контекста базы данных из сервисов коллекций
-        await using var scope = Services.CreateAsyncScope();
-        await using var applicationContext = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
-        
-        var test = await context.Locations.FirstOrDefaultAsync();
-        context.Locations.Remove(test);
-        await context.SaveChangesAsync();
-    }
     /// <summary>
     ///     Создание новой локации
     /// </summary>

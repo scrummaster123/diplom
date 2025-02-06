@@ -16,17 +16,6 @@ public class LocationController(ILocationService locationService,  IServiceProvi
     public async Task<Location> Get([FromQuery] long id)
     {
         
-        using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
-        {
-
-            List<long> ids = new List<long>();
-            // ids.Add(await GetTest());
-            await Delete();
-            // Подтверждение транзакции
-            // scope.Complete();
-        }
-        
-        
         return await locationService.GetLocationByIdAsync(id, HttpContext.RequestAborted);
     }
     
