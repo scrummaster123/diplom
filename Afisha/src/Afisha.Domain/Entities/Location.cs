@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Afisha.Domain.Entities.Abstractions;
+using Microsoft.Extensions.Logging;
 
 namespace Afisha.Domain.Entities;
 

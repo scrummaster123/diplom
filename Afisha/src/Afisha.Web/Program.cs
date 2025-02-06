@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json.Serialization;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;
 using Asp.Versioning;
@@ -9,7 +10,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddCoreServices();
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+    options.JsonSerializerOptions.MaxDepth = 0;
+}); 
 
 // Добавление Postgresql
 builder.AddPostgres();

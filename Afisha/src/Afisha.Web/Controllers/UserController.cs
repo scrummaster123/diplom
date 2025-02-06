@@ -1,4 +1,4 @@
-﻿using Afisha.Domain.Contracts;
+﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
