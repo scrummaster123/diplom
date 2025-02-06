@@ -18,35 +18,6 @@ public class LocationController(ILocationService locationService,  IServiceProvi
         return await locationService.GetLocationByIdAsync(id, HttpContext.RequestAborted);
     }
     
-    private async Task Delete()
-    {
-        
-        // Получение контекста базы данных из сервисов коллекций
-        await using var scope = Services.CreateAsyncScope();
-        await using var applicationContext = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
-        
-        var test = await applicationContext.Locations.FirstOrDefaultAsync();
-        applicationContext.Locations.Remove(test);
-        await applicationContext.SaveChangesAsync();
-    }
-
-    private async Task<long> GetTest()
-    {
-        await using var scope = Services.CreateAsyncScope();
-        await using var applicationContext = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
-
-        var test = applicationContext.Locations.Add(new Location
-        {
-            IsWarmPlace = true,
-            Name = "Test",
-            Owner = new User()
-        });
-
-        await applicationContext.SaveChangesAsync();
-
-        return test.Entity.Id;
-    }
-
     [HttpPost]
     [Route("create")]
     public async Task<Location> CreateLocation([FromBody] Location newLocation)
