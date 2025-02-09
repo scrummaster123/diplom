@@ -1,4 +1,5 @@
 using Afisha.Domain.Entities;
+using Afisha.Domain.Interfaces;
 using Afisha.Infrastructure.Data.Seeding;
 using Microsoft.EntityFrameworkCore;
 
