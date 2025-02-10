@@ -6,10 +6,10 @@ public interface ILocationService
     /// <summary>
     ///     Получение общей информации о локации по идентификатору
     /// </summary>
-    Task<Location> GetLocationByIdAsync(long id, CancellationToken cancellationToken);
+    Task<OutputLocationFull> GetLocationByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Создание новой локации
     /// </summary>
-    Task<Location> CreateLocation(Location location, long ownerId, CancellationToken cancellationToken);
+    Task<OutputLocationBase> CreateLocation(CreateLocationModel location, CancellationToken cancellationToken);
 }
