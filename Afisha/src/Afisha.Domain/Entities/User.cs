@@ -5,6 +5,11 @@ namespace Afisha.Domain.Entities
     public class User : EntityBase<long>
     {
         /// <summary>
+        /// Имя аккаунта пользователя 
+        /// </summary>
+        public string AccountName { get; set; }
+
+        /// <summary>
         /// Имя пользователя
         /// </summary>
         public string FirstName { get; set; }
@@ -22,17 +27,17 @@ namespace Afisha.Domain.Entities
         /// <summary>
         /// Адрес электронной почты 
         /// </summary>
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         /// <summary>
         /// Логин для входа в аккаунт
         /// </summary>
-        public string Login { get; set; }
+        public string? Login { get; set; }
 
         /// <summary>
         /// Хешированный пароль
         /// </summary>
-        public string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         /// <summary>
         /// Дата рождения пользователя (необязательное поле)
