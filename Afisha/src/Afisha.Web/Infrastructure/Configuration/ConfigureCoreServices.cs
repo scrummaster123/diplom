@@ -1,4 +1,5 @@
 ﻿using Afisha.Application.Mappers;
+﻿using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Managers;
 using Afisha.Domain.Interfaces;
@@ -19,6 +20,8 @@ public static class ConfigureCoreServices
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IEventService, EventService>();
         services.AddSingleton<AutoMapperConfiguration>();
+        services.AddScoped<IRatingService, RatingService>();
+        services.AddScoped<IUserSomeActionService, UserSomeActionService>();
         return services;
     }
 

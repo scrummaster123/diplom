@@ -11,7 +11,7 @@ namespace Afisha.Application.Specifications;
 /// <param name="predicate">Функция проверки соответствия каждого элемента условию выборки</param>
 /// <param name="include">Функция для включения навигационных свойств</param>
 /// <param name="orderBy">Функция сортировки элементов</param>
-public abstract class SpecificationBase<TEntity>(
+public class SpecificationBase<TEntity>(
         Expression<Func<TEntity, bool>>? predicate = null,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? include = null,
         Func<IQueryable<TEntity>, IOrderedQueryable<TEntity>>? orderBy = null
