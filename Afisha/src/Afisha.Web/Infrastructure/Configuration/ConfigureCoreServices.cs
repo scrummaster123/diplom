@@ -1,4 +1,5 @@
-﻿using Afisha.Application.Services.Interfaces;
+﻿using Afisha.Application.Mappers;
+using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Managers;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
@@ -16,6 +17,8 @@ public static class ConfigureCoreServices
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IEventService, EventService>();
+        services.AddSingleton<AutoMapperConfiguration>();
         return services;
     }
 
