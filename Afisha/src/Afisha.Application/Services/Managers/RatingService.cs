@@ -1,5 +1,6 @@
 ﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Specifications;
+using Afisha.Application.Specifications.Rating;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Entities.Dto;
 using Afisha.Domain.Interfaces;
@@ -40,7 +41,7 @@ public class RatingService(
 
     public async Task<List<RatingDto>> GetRatingsByEvent(long eventId, CancellationToken cancellationToken)
     {
-        var ratings = await ratingRepository.GetAsync(new SpecificationBase<Rating>(rating => rating.Event.Id == eventId), cancellationToken: cancellationToken);
+        var ratings = await ratingRepository.GetAsync(new RatingByEventIdWithUserAndEventSpecification(eventId), cancellationToken: cancellationToken);
 
         var result = ratings.Select(r => new RatingDto() { Description = r.Description, Value = r.Value, EventId = r.Event.Id, UserId = r.User.Id })
                             .ToList();
