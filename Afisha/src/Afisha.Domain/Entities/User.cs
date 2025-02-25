@@ -47,13 +47,13 @@ namespace Afisha.Domain.Entities
         /// <summary>
         /// Локации пользователя
         /// </summary>
-        public ICollection<Location> Locations { get; set; } = Array.Empty<Location>();
+        public ICollection<Location> Locations { get; set; } = [];
 
         /// <summary>
         /// События пользователя
         /// </summary>
-        public ICollection<Event> Events { get; set; } = Array.Empty<Event>();
+        public ICollection<Event> Events { get; set; } = [];
 
-        
+
     }
 }

@@ -11,23 +11,23 @@ public interface IReadRepository<T, TKey>
     Task<T?> GetByIdAsync(
     TKey id,
     IIncludeSpecification<T>? specification = null,
-    TrackingType trackingType = TrackingType.NoTracking,
+    TrackingType trackingType = TrackingType.Tracking,
     CancellationToken cancellationToken = default);
 
     Task<T> GetByIdOrThrowAsync(
         TKey id,
         IIncludeSpecification<T>? specification = null,
-        TrackingType trackingType = TrackingType.NoTracking,
+        TrackingType trackingType = TrackingType.Tracking,
         CancellationToken cancellationToken = default);
 
     Task<T[]> GetAsync(
         ISpecification<T> specification,
-        TrackingType trackingType = TrackingType.NoTracking,
+        TrackingType trackingType = TrackingType.Tracking,
         CancellationToken cancellationToken = default);
 
     Task<T[]> GetPagedAsync(
         ISpecification<T> specification,
-        TrackingType trackingType = TrackingType.NoTracking,
+        TrackingType trackingType = TrackingType.Tracking,
         int pageIndex = 0,
         int pageSize = 20,
         CancellationToken cancellationToken = default);
