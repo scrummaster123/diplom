@@ -6,7 +6,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Afisha.Infrastructure.Data.Migrations
+namespace Afisha.Infrastructure.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -116,8 +116,8 @@ namespace Afisha.Infrastructure.Data.Migrations
                 columns: new[] { "Id", "Birthday", "Email", "FirstName", "IsMale", "LastName", "Login", "PasswordHash", "Patronymic" },
                 values: new object[,]
                 {
-                    { 1L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "t@t.com", "Ivan", null, "Ivanov", "Ivan", "1", "" },
-                    { 2L, new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Petrovich@t.com", "Petr", null, "Petrovich", "Petrovich", "1", "" }
+                    { 1L, null, "t@t.com", "Ivan", null, "Ivanov", "Ivan", "1", null },
+                    { 2L, null, "Petrovich@t.com", "Petr", null, "Petrovich", "Petrovich", "1", null }
                 });
 
             migrationBuilder.InsertData(
@@ -134,8 +134,8 @@ namespace Afisha.Infrastructure.Data.Migrations
                 columns: new[] { "Id", "DateStart", "LocationId", "SponsorId" },
                 values: new object[,]
                 {
-                    { 1L, new DateOnly(2025, 2, 6), 1L, 1L },
-                    { 2L, new DateOnly(2025, 2, 6), 1L, 1L }
+                    { 1L, new DateOnly(2025, 2, 25), 1L, 1L },
+                    { 2L, new DateOnly(2025, 2, 25), 1L, 1L }
                 });
 
             migrationBuilder.CreateIndex(

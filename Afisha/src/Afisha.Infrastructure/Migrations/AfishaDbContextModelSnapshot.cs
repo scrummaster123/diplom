@@ -8,7 +8,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Afisha.Infrastructure.Data.Migrations
+namespace Afisha.Infrastructure.Migrations
 {
     [DbContext(typeof(AfishaDbContext))]
     partial class AfishaDbContextModelSnapshot : ModelSnapshot
@@ -51,14 +51,14 @@ namespace Afisha.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 1L,
-                            DateStart = new DateOnly(2025, 2, 6),
+                            DateStart = new DateOnly(2025, 2, 25),
                             LocationId = 1L,
                             SponsorId = 1L
                         },
                         new
                         {
                             Id = 2L,
-                            DateStart = new DateOnly(2025, 2, 6),
+                            DateStart = new DateOnly(2025, 2, 25),
                             LocationId = 1L,
                             SponsorId = 1L
                         });
@@ -186,24 +186,20 @@ namespace Afisha.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 1L,
-                            Birthday = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "t@t.com",
                             FirstName = "Ivan",
                             LastName = "Ivanov",
                             Login = "Ivan",
-                            PasswordHash = "1",
-                            Patronymic = ""
+                            PasswordHash = "1"
                         },
                         new
                         {
                             Id = 2L,
-                            Birthday = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Email = "Petrovich@t.com",
                             FirstName = "Petr",
                             LastName = "Petrovich",
                             Login = "Petrovich",
-                            PasswordHash = "1",
-                            Patronymic = ""
+                            PasswordHash = "1"
                         });
                 });
 
