@@ -120,11 +120,11 @@ spec:
     app: afisha
   ports:
   - protocol: TCP
-    name: TCP8080
+    name: port-8080
     port: 8080
     targetPort: 8080
   - protocol: TCP
-    name: TCP8081
+    name: port-8081
     port: 8081
     targetPort: 8081
   type: NodePort
