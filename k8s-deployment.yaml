@@ -1,0 +1,175 @@
+﻿---
+# Namespace Definition
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: afisha
+---
+# Postgres Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db
+  namespace: afisha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db
+  template:
+    metadata:
+      labels:
+        app: db
+    spec:
+      containers:
+      - name: postgres
+        image: postgres
+        env:
+        - name: POSTGRES_PASSWORD
+          value: "123"
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: pgdata
+          mountPath: /var/lib/postgresql/data
+      volumes:
+      - name: pgdata
+        persistentVolumeClaim:
+          claimName: pgdata-pvc
+
+---
+# Postgres Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: db-service
+  namespace: afisha
+spec:
+  selector:
+    app: db
+  ports:
+  - protocol: TCP
+    port: 5432
+    targetPort: 5432
+  type: ClusterIP
+
+---
+# Adminer Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: adminer
+  namespace: afisha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: adminer
+  template:
+    metadata:
+      labels:
+        app: adminer
+    spec:
+      containers:
+      - name: adminer
+        image: adminer
+        ports:
+        - containerPort: 8080
+
+---
+# Adminer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: adminer-service
+  namespace: afisha
+spec:
+  selector:
+    app: adminer
+  ports:
+  - protocol: TCP
+    port: 8084
+    targetPort: 8080
+  type: NodePort
+
+---
+# Afisha Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: afisha
+  namespace: afisha
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: afisha
+  template:
+    metadata:
+      labels:
+        app: afisha
+    spec:
+      containers:
+      - name: afisha
+        image: ghcr.io/scrummaster123/afisha_otus:latest
+        ports:
+        - containerPort: 8080
+        - containerPort: 8081
+      initContainers:
+      - name: wait-for-db
+        image: busybox
+        command: ['sh', '-c', 'until nc -z db-service 5432; do echo waiting for db; sleep 2; done;']
+
+---
+# Afisha Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: afisha-service
+  namespace: afisha
+spec:
+  selector:
+    app: afisha
+  ports:
+  - name: port-8080
+    port: 8080
+    targetPort: 8080
+  - name: port-8081
+    port: 8081
+    targetPort: 8081
+---
+# PersistentVolumeClaim for pgdata
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pgdata-pvc
+  namespace: afisha
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi  # Adjust size as needed
+
+---
+# NetworkPolicy to allow communication within the 'afisha' namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: afisha-network-policy
+  namespace: afisha
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: afisha
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          kubernetes.io/metadata.name: afisha

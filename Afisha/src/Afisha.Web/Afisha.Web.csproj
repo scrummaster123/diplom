@@ -1,12 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-    <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>39108607-1433-42ef-b028-2e5d672f425f</UserSecretsId>
+    <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>.</DockerfileContext>
+    <DockerfileFile>../../../Dockerfile</DockerfileFile>
+  </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
         <ProjectReference Include="..\Afisha.Application\Afisha.Application.csproj" />
         <ProjectReference Include="..\Afisha.Domain\Afisha.Domain.csproj" />
@@ -29,9 +34,5 @@
         <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
-
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-      <Exec Command="copy settings.$(Configuration).json appsettings.json" />
-    </Target>
 
 </Project>

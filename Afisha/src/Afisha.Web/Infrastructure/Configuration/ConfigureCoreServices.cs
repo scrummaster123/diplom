@@ -49,7 +49,10 @@ public static class ConfigureCoreServices
             context.EnableSensitiveDataLogging();
             context.EnableDetailedErrors();
 #endif
+            
         });
+
+        builder.Services.AddHostedService<MigrationService>();
 
         return builder;
     }
