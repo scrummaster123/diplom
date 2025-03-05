@@ -30,16 +30,15 @@ jobs:
           docker tag kuberdeploytest:latest ghcr.io/${{ github.repository_owner }}/afisha_otus:latest
           docker push ghcr.io/${{ github.repository_owner }}/afisha_otus:latest
 
-  deploy-to-minikube:
-    runs-on: clonx  # Must run on a machine with Minikube installed
+  deploy-to-docker:
+    runs-on: clonx  # Must run on a machine with Docker installed
     needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Deploy to Minikube
+      - name: Deploy to Docker
         run: |
-          kubectl apply -f k8s-deployment.yaml
-          minikube service afisha-service --url
+          docker-compose up -d
 
 
