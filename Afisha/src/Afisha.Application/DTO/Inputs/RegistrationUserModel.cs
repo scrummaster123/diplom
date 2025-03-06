@@ -1,16 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Afisha.Application
+namespace Afisha.Application.DTO.Inputs
 {
     /// <summary>
     ///     Модель для регистрации нового пользователя в системе
     /// </summary>
-    public class RegistrationUserAppModel
+    public class RegistrationUserModel
     {
         /// <summary>
         ///     Имя пользователя 
         /// </summary>        
-        [Required(ErrorMessage = "Поле обязательно для заполнения")]        
+        [Required(ErrorMessage = "Поле обязательно для заполнения")]
         [StringLength(50, MinimumLength = 2)]
         public string FirstName { get; set; }
 
@@ -38,7 +38,7 @@ namespace Afisha.Application
         ///     Логин для входа в аккаунт
         /// </summary>
         [Required]
-        [StringLength (20, MinimumLength = 6)]        
+        [StringLength(20, MinimumLength = 6)]
         public string Login { get; set; }
 
         /// <summary>

@@ -1,9 +1,9 @@
-﻿namespace Afisha.Application
+﻿namespace Afisha.Application.DTO.Outputs
 {
     /// <summary>
     ///     Мини модель для отображения пользователя, когда подробная информация о юзере не нужна
     /// </summary>
-    public class OutputMiniUserAppModel
+    public class OutputMiniUserModel
     {
         /// <summary>
         ///     Имя пользователя 
@@ -21,7 +21,7 @@
         public string FullName => $"{FirstName} {LastName}";
 
         /// <summary>
-        ///     Логин пользователя
+        ///     Логин пользователя 
         /// </summary>
         public string Login { get; set; }
     }

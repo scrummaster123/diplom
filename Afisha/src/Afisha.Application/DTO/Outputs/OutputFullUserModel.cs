@@ -1,11 +1,11 @@
 ﻿using Afisha.Domain.Entities;
 
-namespace Afisha.Application
+namespace Afisha.Application.DTO.Outputs
 {
     /// <summary>
     ///     Полная модель для просмотра подробной информации юзера
     /// </summary>
-    public class OutputFullUserAppModel
+    public class OutputFullUserModel
     {
         /// <summary>
         ///     Имя пользователя
@@ -45,11 +45,11 @@ namespace Afisha.Application
         /// <summary>
         ///     Локации пользователя
         /// </summary>
-        public ICollection<Location> Locations { get; set; } = Array.Empty<Location>();  // Необходима замена модели в дальнейшем
+        public ICollection<Location> Locations { get; set; } = [];  // ------------ (?) Замена модели на  ? ------------
 
         /// <summary>
         /// События пользователя
         /// </summary>
-        public ICollection<Event> Events { get; set; } = Array.Empty<Event>();  // Необходима замена модели в дальнейшем
+        public ICollection<Event> Events { get; set; } = [];  // ----- (?) Здесь нужна замена на OutputEvent --------
     }
 }

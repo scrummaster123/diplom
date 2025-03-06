@@ -1,4 +1,4 @@
-namespace Afisha.Application;
+namespace Afisha.Application.DTO.Inputs;
 
 public class CreateLocationModel
 {

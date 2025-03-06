@@ -1,4 +1,6 @@
-﻿using Afisha.Domain.Entities;
+﻿using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
+using Afisha.Domain.Entities;
 
 namespace Afisha.Application.Services.Interfaces;
 public interface ILocationService

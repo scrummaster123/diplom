@@ -1,4 +1,4 @@
-﻿using Afisha.Application.DTO;
+﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
