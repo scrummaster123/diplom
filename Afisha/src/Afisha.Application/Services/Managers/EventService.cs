@@ -1,11 +1,12 @@
-﻿using Afisha.Application.DTO;
-using Afisha.Application.Services.Interfaces;
+﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces.Repositories;
 using Afisha.Domain.Interfaces;
 using Afisha.Application.Specifications.Event;
 using AutoMapper;
 using Afisha.Application.Mappers;
+using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
 
 namespace Afisha.Application.Services.Managers;
 

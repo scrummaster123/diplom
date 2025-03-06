@@ -1,3 +1,5 @@
+using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Specifications.Location;
 using Afisha.Domain.Entities;

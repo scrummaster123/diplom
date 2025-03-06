@@ -1,6 +1,6 @@
-﻿namespace Afisha.Application.DTO;
+﻿namespace Afisha.Application.DTO.Outputs;
 
-public class OutputEventUser
+public class OutputEventUser // ----------- (?) Нужен ли этот класс, если уже есть OutputMiniUserModel ---------------
 {
     /// <summary>
     /// Имя пользователя

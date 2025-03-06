@@ -1,6 +1,6 @@
-namespace Afisha.Application;
+namespace Afisha.Application.DTO.Outputs;
 
-public class OutputLocationBase
+public class OutputLocationBase // -------- (?) Почти аналогичные модели с OutputEventLocation -----
 {
     /// <summary>
     ///     Id владелца площадки

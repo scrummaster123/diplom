@@ -1,8 +1,8 @@
 ﻿using Afisha.Domain.Entities;
 
-namespace Afisha.Application.DTO;
+namespace Afisha.Application.DTO.Outputs;
 
-public class OutputEvent
+public class OutputEvent // ----------- (?) Название ивента ----------
 {
     /// <summary>
     /// Владелец мероприятия

@@ -1,4 +1,4 @@
-﻿namespace Afisha.Application.DTO;
+﻿namespace Afisha.Application.DTO.Inputs;
 
 public class CreateEvent
 {
