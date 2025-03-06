@@ -1,8 +1,11 @@
-﻿using Afisha.Domain.Entities.Abstractions;
+﻿using Afisha.Domain.Entities;
 
-namespace Afisha.Domain.Entities
+namespace Afisha.Application
 {
-    public class User : EntityBase<long>
+    /// <summary>
+    ///     Полная модель для просмотра подробной информации юзера
+    /// </summary>
+    public class OutputFullUserAppModel
     {
         /// <summary>
         ///     Имя пользователя
@@ -25,33 +28,28 @@ namespace Afisha.Domain.Entities
         public string? Email { get; set; }
 
         /// <summary>
-        ///     Логин для входа в аккаунт
+        ///     Логин юзера
         /// </summary>
         public string Login { get; set; }
 
         /// <summary>
-        ///     Хешированный пароль
+        ///    Возраст пользователя (необязательное поле)
         /// </summary>
-        public string? PasswordHash { get; set; }
-
-        /// <summary>
-        ///     Дата рождения пользователя (необязательное поле)
-        /// </summary>
-        public DateTime? Birthday { get; set; }
+        public int? Age { get; set; }
 
         /// <summary>
         ///     Пол пользователя (необязательное поле)
         /// </summary>
         public bool? IsMale { get; set; }
-        
-        /// <summary>
-        ///     Локации пользователя 
-        /// </summary>
-        public ICollection<Location> Locations { get; set; } = Array.Empty<Location>(); 
 
         /// <summary>
-        ///     События пользователя 
+        ///     Локации пользователя
         /// </summary>
-        public ICollection<Event> Events { get; set; } = Array.Empty<Event>();        
+        public ICollection<Location> Locations { get; set; } = Array.Empty<Location>();  // Необходима замена модели в дальнейшем
+
+        /// <summary>
+        /// События пользователя
+        /// </summary>
+        public ICollection<Event> Events { get; set; } = Array.Empty<Event>();  // Необходима замена модели в дальнейшем
     }
 }
