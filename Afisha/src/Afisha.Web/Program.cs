@@ -1,12 +1,15 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
 using Afisha.Web.Infrastructure.Configuration;
+using Afisha.Web.Middleware;
 using Asp.Versioning;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails(); // Можно для соответствия RFC 7807
 
 builder.Services.AddCoreServices();
 builder.Services.AddControllers().AddJsonOptions(options =>
@@ -37,8 +40,9 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseExceptionHandler();
 
+// Configure the HTTP request pipeline.
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
@@ -53,3 +57,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
