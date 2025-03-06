@@ -4,21 +4,11 @@
     ///     Мини модель для отображения пользователя, когда подробная информация о юзере не нужна
     /// </summary>
     public class OutputMiniUserModel
-    {
-        /// <summary>
-        ///     Имя пользователя 
-        /// </summary>
-        public string FirstName { get; set; }
-
-        /// <summary>
-        ///     Фамилия пользователя
-        /// </summary>
-        public string LastName { get; set; }
-
+    {        
         /// <summary>
         ///     Полное имя пользователя
         /// </summary>
-        public string FullName => $"{FirstName} {LastName}";
+        public string FullName { get; set; }
 
         /// <summary>
         ///     Логин пользователя 

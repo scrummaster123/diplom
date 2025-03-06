@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using Afisha.Application.Mappers.UserMappper;
+using AutoMapper;
 
 namespace Afisha.Application.Mappers;
 
@@ -9,6 +10,7 @@ public class AutoMapperConfiguration
         var config = new MapperConfiguration(cfg =>
         {
             cfg.AddProfile<AfishaMappingProfile>();
+            cfg.AddProfile<UserMapper>();
         });
         return config;
     }
