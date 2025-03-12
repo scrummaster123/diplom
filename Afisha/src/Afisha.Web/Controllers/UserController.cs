@@ -1,12 +1,15 @@
 ﻿using Afisha.Application.Services.Interfaces;
+using Afisha.Application.Specifications.User;
 using Afisha.Domain.Entities;
+using Afisha.Domain.Interfaces.Repositories;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Afisha.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController(IUserService userService) :  Controller
+    public class UserController(IUserService userService) : Controller
     {
         [HttpPost]
         [Route("add-user")]
@@ -27,11 +30,26 @@ namespace Afisha.Web.Controllers
         [Route("delete-user")]
         public async Task<IActionResult> DeleteUserAsync(long id)
         {
-            if( await userService.DeleteUserAsync(id, HttpContext.RequestAborted) == true)
+            if (await userService.DeleteUserAsync(id, HttpContext.RequestAborted) == true)
             {
                 return Ok();
             }
             return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("get-user-by-login")]
+        public async Task<User> GetUserByLoginAsync([FromQuery] string login)
+        {
+            return await userService.GetUserByLoginAsync(login, HttpContext.RequestAborted);
+
+        }
+
+        [HttpGet]
+        [Route("get-user-by-email")]
+        public async Task<User> GetUserByEmailAsync([FromQuery] string email)
+        {
+            return await userService.GetUserByLoginAsync(email, HttpContext.RequestAborted);
         }
     }
 }
