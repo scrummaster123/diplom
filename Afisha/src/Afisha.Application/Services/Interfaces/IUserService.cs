@@ -17,4 +17,6 @@ public interface IUserService
     /// Удаление пользователя 
     /// </summary>
     Task<bool> DeleteUserAsync(long id, CancellationToken cancellationToken);
+    Task<User> GetUserByLoginAsync(string login, CancellationToken cancellationToken);
+    Task<User> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
 }
