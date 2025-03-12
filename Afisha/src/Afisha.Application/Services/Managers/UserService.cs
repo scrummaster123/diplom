@@ -10,10 +10,8 @@ namespace Afisha.Application.Services.Managers
 {
     // В дальнейшем лучше было бы сделать котроллер/сервис для регистрации пользователя,
     // сверстать входные и выходные модели, сделать аутентификацию/авторизацию и добавить роли
-    public class UserService(IRepository<User, long> userRepository, IUnitOfWork unitOfWork, IUserRepository userRep) : IUserService
+    public class UserService(IRepository<User, long> userRepository, IUnitOfWork unitOfWork, IUserRepository userRep, IMapper mapper) : IUserService
     {
-        private readonly IUserRepository _userRepository;
-        
         /// <summary>
         ///  Добавление нового пользователя 
         /// </summary>
@@ -44,8 +42,7 @@ namespace Afisha.Application.Services.Managers
             {
                 throw new Exception($"Пользователь с идентификатором {id} не найден");
                 // + Логирование
-            }
-            // Здесь возможно будет маппинг
+            }            
             return user;
         }
 
@@ -70,27 +67,25 @@ namespace Afisha.Application.Services.Managers
         /// </summary>
         public async Task<User> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByLoginAsync(login, cancellationToken);
+            var user = await userRep.GetUserByLoginAsync(login, cancellationToken);
 
             if (user is null)
             {
                 throw new Exception($"Пользователь с логином {login} не найден");
                 // + Логирование
-            }
-            // Здесь возможно будет маппинг
+            }           
             return user;
         }
 
         public async Task<User> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByLoginAsync(email, cancellationToken);
+            var user = await userRep.GetUserByLoginAsync(email, cancellationToken);
 
             if (user is null)
             {
-                throw new Exception($"Пользователь с логином {email} не найден");
+                throw new Exception($"Пользователь с email {email} не найден");
                 // + Логирование
-            }
-            // Здесь возможно будет маппинг
+            }            
             return user;
         }
     }

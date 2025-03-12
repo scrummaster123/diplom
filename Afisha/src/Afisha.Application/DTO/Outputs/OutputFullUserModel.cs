@@ -23,11 +23,6 @@ namespace Afisha.Application.DTO.Outputs
         public string? Patronymic { get; set; }
 
         /// <summary>
-        ///     Адрес электронной почты 
-        /// </summary>
-        public string? Email { get; set; }
-
-        /// <summary>
         ///     Логин юзера
         /// </summary>
         public string Login { get; set; }
