@@ -7,7 +7,7 @@ namespace Afisha.Web.Controllers
     [ApiController]
     [Route("[controller]")]
     public class UserController(IUserService userService) :  Controller
-    {
+    {        
         [HttpPost]
         [Route("add-user")]
         public async Task<IActionResult> AddUserAsync([FromBody] User newUser)
