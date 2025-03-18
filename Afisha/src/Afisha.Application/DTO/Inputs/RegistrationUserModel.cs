@@ -40,14 +40,13 @@ namespace Afisha.Application.DTO.Inputs
         /// </summary>
         [Required]
         [StringLength(20, MinimumLength = 6)]
-        [UniqueLogin]
         public string Login { get; set; }
 
         /// <summary>
         ///     Строка для пароля
         /// </summary>
         [Required]
-        [StringLength(100, MinimumLength = 8, ErrorMessage = "Пароль должен быть не менее 8 символов.")]
+        [StringLength(32, MinimumLength = 8, ErrorMessage = "Пароль должен быть не менее 8 символов.")]
         [RegularExpression(@"^(?=.*[A-Za-z])(?=.*\d)(?=.*[!$%^&*?])[A-Za-z\d!$%^&*?]{8,}$",
         ErrorMessage = "Пароль должен содержать хотя бы одну букву, одну цифру и один специальный символ.")]
         public string Password { get; set; }

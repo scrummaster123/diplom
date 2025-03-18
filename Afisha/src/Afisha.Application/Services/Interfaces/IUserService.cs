@@ -27,6 +27,4 @@ public interface IUserService
     /// Получить пользователя по email
     /// </summary>
     Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
-    bool IsLoginAvailable(string login);
-    bool IsEmailAvailable(string email);
 }

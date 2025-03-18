@@ -17,16 +17,15 @@ namespace Afisha.Domain.Interfaces.Repositories
             return await context.Users
             .FirstOrDefaultAsync(u => u.Email == email);
         }
-        public bool IsLoginAvailable(string login)
-        {
-            if (context.Users.FirstOrDefault(u => u.Login == login) == null) return true;
-            return false;
-        }
 
-        public bool IsEmailAvailable(string email)
-        {
-            if (context.Users.FirstOrDefault() == null) return true;
-            return false;
+        public async Task<bool> AddRegisterUserAsync(User user, CancellationToken cancellationToken)
+        {          
+            context.Users.Add(user);
+            if (await context.SaveChangesAsync(cancellationToken) != 0)
+            {
+                return true;
+            }
+            return false;            
         }
     }
 }

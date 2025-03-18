@@ -1,5 +1,4 @@
-﻿using Afisha.Application.DTO.Outputs;
-using Afisha.Application.Services.Interfaces;
+﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Specifications.User;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces;
@@ -90,20 +89,5 @@ namespace Afisha.Application.Services.Managers
             return user;
         }
 
-        /// <summary>
-        /// Метод для определения уникальности логина (для атрибута)
-        /// </summary>
-        public bool IsLoginAvailable(string login)   
-        {
-            return userRep.IsLoginAvailable(login);            
-        }
-
-        /// <summary>
-        /// Метод для определения уникальности имейла (для атрибута)
-        /// </summary>
-        public bool IsEmailAvailable(string email)
-        {
-            return userRep.IsEmailAvailable(email);
-        }
     }
 }
