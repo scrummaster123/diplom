@@ -1,4 +1,5 @@
-﻿using Afisha.Application.Mappers;
+﻿using Afisha.Application;
+using Afisha.Application.Mappers;
 ﻿using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Managers;
@@ -7,6 +8,7 @@ using Afisha.Domain.Interfaces.Repositories;
 using Afisha.Infrastructure.Data;
 using Afisha.Infrastructure.Data.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Afisha.Web.Infrastructure.Configuration;
 
@@ -22,6 +24,7 @@ public static class ConfigureCoreServices
         services.AddSingleton<AutoMapperConfiguration>();
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
+        services.AddScoped<IRegisteredServices, RegisteredServices>();
         return services;
     }
 

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Afisha.Application;
 
 namespace Afisha.Application.DTO.Inputs
 {
@@ -39,6 +40,7 @@ namespace Afisha.Application.DTO.Inputs
         /// </summary>
         [Required]
         [StringLength(20, MinimumLength = 6)]
+        [UniqueLogin]
         public string Login { get; set; }
 
         /// <summary>

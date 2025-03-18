@@ -17,5 +17,16 @@ namespace Afisha.Domain.Interfaces.Repositories
             return await context.Users
             .FirstOrDefaultAsync(u => u.Email == email);
         }
+        public bool IsLoginAvailable(string login)
+        {
+            if (context.Users.FirstOrDefault(u => u.Login == login) == null) return true;
+            return false;
+        }
+
+        public bool IsEmailAvailable(string email)
+        {
+            if (context.Users.FirstOrDefault() == null) return true;
+            return false;
+        }
     }
 }
