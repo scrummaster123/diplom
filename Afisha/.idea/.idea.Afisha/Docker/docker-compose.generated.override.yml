@@ -1,0 +1,21 @@
+# This is a generated file. Not intended for manual editing.
+version: "3.5"
+services:
+  afisha.web:
+    build:
+      context: "C:\\Users\\Faggar\\Documents\\diplom\\Afisha"
+      dockerfile: "src/Afisha.Web/Dockerfile"
+      target: "base"
+    command: []
+    entrypoint:
+    - "dotnet"
+    - "/app/bin/Debug/net8.0/Afisha.Web.dll"
+    environment:
+      DOTNET_USE_POLLING_FILE_WATCHER: "true"
+    image: "afisha.web:dev"
+    ports: []
+    volumes:
+    - "C:\\Users\\Faggar\\.nuget\\packages:/home/app/.nuget/packages"
+    - "C:\\Users\\Faggar\\Documents\\diplom\\Afisha\\src\\Afisha.Web:/app:rw"
+    - "C:\\Users\\Faggar\\Documents\\diplom\\Afisha:/src:rw"
+    working_dir: "/app"

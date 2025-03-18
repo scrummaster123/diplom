@@ -1,42 +1,30 @@
-using System.Reflection;
-using System.Text.Json.Serialization;
+using Afisha.Infrastructure.Data;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;
-using Asp.Versioning;
-using Microsoft.OpenApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails(); // Можно для соответствия RFC 7807
 
+// Можно для соответствия RFC 7807
+builder.Services.AddProblemDetails(); 
+
+// Добавление основных сервисов
 builder.Services.AddCoreServices();
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.MaxDepth = 0;
-}); 
+
+//  Регистрация в сервисах RabbitMQ
+builder.RegisterRabbitMq();
 
 // Добавление Postgresql
 builder.AddPostgres();
 
+// Добавление версионирования API
+builder.AddApiVersioning();
+// Добавление сваггера
+builder.AddSwagger();
 
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-});
-
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Afisha API", Version = "v1" });
-
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    //options.IncludeXmlComments(xmlPath);
-});
 
 var app = builder.Build();
 
@@ -55,6 +43,10 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
+db.Database.Migrate();
 
 app.Run();
 

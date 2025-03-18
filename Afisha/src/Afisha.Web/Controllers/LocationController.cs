@@ -1,9 +1,6 @@
 using Afisha.Application;
 using Afisha.Application.Services.Interfaces;
-using Afisha.Domain.Entities;
-using Afisha.Infrastructure.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Web.Controllers;
 

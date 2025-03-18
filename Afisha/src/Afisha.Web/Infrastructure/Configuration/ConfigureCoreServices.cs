@@ -1,12 +1,18 @@
-﻿using Afisha.Application.Mappers;
-﻿using Afisha.Application.Services;
+﻿using System.Reflection;
+using System.Text.Json.Serialization;
+using Afisha.Application.Mappers;
+using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Managers;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
 using Afisha.Infrastructure.Data;
 using Afisha.Infrastructure.Data.Repositories;
+using Asp.Versioning;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
+using static System.Int32;
 
 namespace Afisha.Web.Infrastructure.Configuration;
 
@@ -22,6 +28,13 @@ public static class ConfigureCoreServices
         services.AddSingleton<AutoMapperConfiguration>();
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
+        
+        services.AddControllers().AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            options.JsonSerializerOptions.MaxDepth = 0;
+        }); 
+        
         return services;
     }
 
@@ -53,4 +66,60 @@ public static class ConfigureCoreServices
 
         return builder;
     }
+    
+    public static WebApplicationBuilder RegisterRabbitMq(this WebApplicationBuilder builder)
+    {
+        
+        var rabbitHost = builder.Configuration.GetValue<string>("RabbitMQ:Host");
+        var result = TryParse(builder.Configuration.GetValue<string>("RabbitMQ:Port"), out var rabbitPort);
+        var rabbitUser = builder.Configuration.GetValue<string>("RabbitMQ:User");
+        var rabbitPassword = builder.Configuration.GetValue<string>("RabbitMQ:Password");
+        var rabbitVirtualHost = builder.Configuration.GetValue<string>("RabbitMQ:VirtualHost");
+        Console.WriteLine("RabbitMQ:Host: " + rabbitHost);
+        Console.WriteLine("RabbitMQ:Port: " + rabbitPort);
+        Console.WriteLine("RabbitMQ:User: " + rabbitUser);
+        Console.WriteLine("RabbitMQ:Password: " + rabbitPassword);
+        
+        builder.Services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                cfg.Host(rabbitHost,port: (ushort)(result ? rabbitPort : 5672), rabbitVirtualHost,"", h =>
+                {
+                    h.Username(rabbitUser);
+                    h.Password(rabbitPassword);
+                });
+                cfg.ConfigureEndpoints(context);
+            });
+        });
+        return builder;
+    }
+    
+    public static WebApplicationBuilder AddSwagger(this WebApplicationBuilder builder)
+    {
+        
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Afisha API", Version = "v1" });
+
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            //options.IncludeXmlComments(xmlPath);
+        });
+        return builder;
+    }
+    
+    public static WebApplicationBuilder AddApiVersioning(this WebApplicationBuilder builder)
+    {
+        
+        builder.Services.AddApiVersioning(options =>
+        {
+            options.DefaultApiVersion = new ApiVersion(1, 0);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.ReportApiVersions = true;
+        });
+        return builder;
+    }
+
+
 }
