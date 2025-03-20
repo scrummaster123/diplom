@@ -1,16 +1,20 @@
 ﻿using System.Reflection;
 using System.Text.Json.Serialization;
+using Afisha.Application;
 using Afisha.Application.Mappers;
 using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
+using Afisha.Application.Services.Interfaces.Auth;
 using Afisha.Application.Services.Managers;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
+using Afisha.Infrastructure;
 using Afisha.Infrastructure.Data;
 using Afisha.Infrastructure.Data.Repositories;
 using Asp.Versioning;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.OpenApi.Models;
 using static System.Int32;
 
@@ -35,6 +39,9 @@ public static class ConfigureCoreServices
             options.JsonSerializerOptions.MaxDepth = 0;
         }); 
         
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJwtOptions, JwtOptions>();
+        services.AddScoped<IJwtProvider, JwtProvider>();
         return services;
     }
 

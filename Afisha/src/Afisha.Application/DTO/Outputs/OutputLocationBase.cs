@@ -1,11 +1,16 @@
-﻿namespace Afisha.Application.DTO;
+namespace Afisha.Application.DTO.Outputs;
 
-public class OutputEventLocation
+public class OutputLocationBase // -------- (?) Почти аналогичные модели с OutputEventLocation -----
 {
+    /// <summary>
+    ///     Id владелца площадки
+    /// </summary>
+    public long OwnerId { get; set; }
+
     /// <summary>
     ///     Наименование площадки
     /// </summary>
-    public string Name { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     ///     Стоимость для проведения. Default = 0. Проведение бесплатное

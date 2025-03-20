@@ -1,4 +1,7 @@
 using Afisha.Infrastructure.Data;
+using System.Reflection;
+using System.Text.Json.Serialization;
+using Afisha.Infrastructure;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +16,7 @@ builder.Services.AddProblemDetails();
 
 // Добавление основных сервисов
 builder.Services.AddCoreServices();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
 //  Регистрация в сервисах RabbitMQ
 builder.RegisterRabbitMq();
