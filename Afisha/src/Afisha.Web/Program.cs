@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Afisha.Infrastructure;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;
 using Asp.Versioning;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddProblemDetails(); // Можно для соответствия RFC 7807
 
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 builder.Services.AddCoreServices();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {

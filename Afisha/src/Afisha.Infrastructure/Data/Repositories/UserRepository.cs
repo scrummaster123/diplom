@@ -17,5 +17,15 @@ namespace Afisha.Domain.Interfaces.Repositories
             return await context.Users
             .FirstOrDefaultAsync(u => u.Email == email);
         }
+
+        public async Task<bool> AddRegisterUserAsync(User user, CancellationToken cancellationToken)
+        {          
+            context.Users.Add(user);
+            if (await context.SaveChangesAsync(cancellationToken) != 0)
+            {
+                return true;
+            }
+            return false;            
+        }
     }
 }

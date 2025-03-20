@@ -6,5 +6,6 @@ namespace Afisha.Domain.Interfaces.Repositories
     {
         Task<User> GetUserByLoginAsync(string login, CancellationToken cancellationToken);
         Task<User> GetUserByEmailAsync(string email, CancellationToken cancellationToken);
+        Task<bool> AddRegisterUserAsync(User user, CancellationToken cancellationToken);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Afisha.Application.DTO.Outputs;
+﻿using System.ComponentModel.DataAnnotations;
+using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities;
 using AutoMapper;
@@ -38,10 +39,16 @@ namespace Afisha.Web.Controllers
 
         [HttpGet]
         [Route("get-user-by-login")]
-        public async Task<OutputMiniUserModel> GetUserByLoginAsync([FromQuery] string login)
+        public async Task<ActionResult<OutputMiniUserModel>> GetUserByLoginAsync([FromQuery, Required] string login)
         {
-            return mapper.Map<OutputMiniUserModel>(await userService.GetUserByLoginAsync(login, HttpContext.RequestAborted));
+            var getUserByLogin = await userService.GetUserByLoginAsync(login, HttpContext.RequestAborted);
 
-        }               
+            if (getUserByLogin == null)
+            {
+                return NotFound(new { message = $"Пользователь с логином {login = login.ToLowerInvariant()} не был найден" });
+            }
+            return Ok(mapper.Map<OutputMiniUserModel>(getUserByLogin));
+
+        }        
     }
 }
