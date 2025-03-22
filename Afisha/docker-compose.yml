@@ -58,7 +58,7 @@ services:
       RABBITMQ_PASS: guest
       ASPNETCORE_ENVIRONMENT: Docker
     ports:
-      - "5182:8080"  # Пробрасываем порт 80 контейнера наружу на порт 8080
+      - "5182:8080" 
 
   afisha.notificationservice:
     image: afisha.notificationservice
