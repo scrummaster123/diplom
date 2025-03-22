@@ -18,6 +18,7 @@ using var host = Host.CreateDefaultBuilder(args)
     })
     .ConfigureServices((hostContext, services) =>
     {
+        // Получение данных для подключения к RabbitMQ
         var config = hostContext.Configuration.GetSection("RabbitMQ");
         var rabbitHost = config["Host"];
         var port = ushort.TryParse(config["Port"], out var p) ? p : (ushort)5672;
@@ -25,11 +26,6 @@ using var host = Host.CreateDefaultBuilder(args)
         var password = config["Password"];
         var vhost = config["VirtualHost"];
 
-        Console.WriteLine(rabbitHost);
-        Console.WriteLine(port);
-        Console.WriteLine(user);
-        Console.WriteLine(password);
-        Console.WriteLine(vhost);
         services.AddMassTransit(x =>
         {
             x.AddConsumer<NotificationConsumer>();
@@ -42,7 +38,7 @@ using var host = Host.CreateDefaultBuilder(args)
                     h.Password(password);
                 });
 
-                // Регистрируем Consumer в receive endpoint
+                // Регистрация Consumer
                 cfg.ReceiveEndpoint("email_message", e =>
                 {
                     e.ConfigureConsumer<NotificationConsumer>(context);
@@ -57,8 +53,6 @@ using var host = Host.CreateDefaultBuilder(args)
         else
             log.MinimumLevel.Debug();
 
-        log.MinimumLevel.Override("Microsoft", LogEventLevel.Warning);
-        log.MinimumLevel.Override("Quartz", LogEventLevel.Information);
         log.WriteTo.Console();
     })
     .Build();

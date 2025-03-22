@@ -16,10 +16,6 @@ public static class RabbitInjection
         var rabbitUser = builder.Configuration.GetValue<string>("RabbitMQ:User");
         var rabbitPassword = builder.Configuration.GetValue<string>("RabbitMQ:Password");
         var rabbitVirtualHost = builder.Configuration.GetValue<string>("RabbitMQ:VirtualHost");
-        Console.WriteLine("RabbitMQ:Host: " + rabbitHost);
-        Console.WriteLine("RabbitMQ:Port: " + rabbitPort);
-        Console.WriteLine("RabbitMQ:User: " + rabbitUser);
-        Console.WriteLine("RabbitMQ:Password: " + rabbitPassword);
         
         builder.Services.AddMassTransit(x =>
         {
