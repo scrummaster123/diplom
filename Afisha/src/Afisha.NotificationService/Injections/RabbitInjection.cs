@@ -21,7 +21,7 @@ public static class RabbitInjection
         {
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host(rabbitHost,port: rabbitPort, rabbitVirtualHost,"", h =>
+                cfg.Host(rabbitHost, port: rabbitPort, rabbitVirtualHost, h =>
                 {
                     h.Username(rabbitUser);
                     h.Password(rabbitPassword);
