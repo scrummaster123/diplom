@@ -8,7 +8,7 @@ public interface IEventService
     /// <summary>
     ///     Получение информации о событии по идентификатору
     /// </summary>
-    Task<OutputEvent> GetEventyByIdAsync(long id, CancellationToken cancellationToken);
+    Task<OutputEvent> GetEventByIdAsync(long id, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Создание нового события

@@ -23,7 +23,7 @@ public class EventService(IRepository<Event, long> eventRepository,
         await unitOfWork.CommitAsync(cancellationToken);
     }
 
-    public async Task<OutputEvent> GetEventyByIdAsync(long id, CancellationToken cancellationToken)
+    public async Task<OutputEvent> GetEventByIdAsync(long id, CancellationToken cancellationToken)
     {
         var config = autoMapperConfiguration.Configure();
         var iMapper = config.CreateMapper();

@@ -20,7 +20,7 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
             Content = DateTime.Now.ToLongDateString(),
             Email = "user@mail.ri"
         });
-        var eventItem = await eventService.GetEventyByIdAsync(id, HttpContext.RequestAborted);
+        var eventItem = await eventService.GetEventByIdAsync(id, HttpContext.RequestAborted);
         return Ok(eventItem);
     }
 
