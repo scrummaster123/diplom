@@ -16,6 +16,7 @@ builder.Services.AddProblemDetails();
 
 // Добавление основных сервисов
 builder.Services.AddCoreServices();
+builder.Services.RegisterMapperProfiles();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
 //  Регистрация в сервисах RabbitMQ

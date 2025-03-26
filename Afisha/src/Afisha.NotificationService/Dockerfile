@@ -3,10 +3,11 @@ USER $APP_UID
 WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Docker
-WORKDIR /src
-COPY ["Afisha.NotificationService/Afisha.NotificationService.csproj", "Afisha.NotificationService/"]
-RUN dotnet restore "Afisha.NotificationService/Afisha.NotificationService.csproj"
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /
+COPY ["src/Afisha.NotificationService/Afisha.NotificationService.csproj", "src/Afisha.NotificationService/"]
+COPY ["src/RabbitMQModels/RabbitMQModels.csproj", "src/RabbitMQModels/"]
+RUN dotnet restore "src/Afisha.NotificationService/Afisha.NotificationService.csproj"
 COPY . .
 WORKDIR "/src/Afisha.NotificationService"
 RUN dotnet build "Afisha.NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
