@@ -3,7 +3,6 @@
 services:
   rabbit:
     image: rabbitmq:3-management
-    restart: always
     hostname: rabbitmqhost
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -23,7 +22,6 @@ services:
 
   postgres:
     image: postgres:latest
-    restart: always
     environment:
       POSTGRES_USER: otus_system
       POSTGRES_PASSWORD: otus-123@!
@@ -33,7 +31,7 @@ services:
     networks:
       - myLocalNetwork
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "otus_system" ]
+      test: [ "CMD", "pg_isready", "-U", "otus_system", "-d", "otus_course" ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -50,7 +48,6 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
-    restart: always
     environment:
       RABBITMQ_HOST: rabbitmqhost
       RABBITMQ_PORT: 5672

@@ -5,15 +5,14 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Docker
 WORKDIR /src
-COPY ["Afisha.NotificationService/Afisha.NotificationService.csproj", "Afisha.NotificationService/"]
-RUN dotnet restore "Afisha.NotificationService/Afisha.NotificationService.csproj"
+COPY ["src/Afisha.NotificationService/Afisha.NotificationService.csproj", "src/Afisha.NotificationService/"]
+RUN dotnet restore "src/Afisha.NotificationService/Afisha.NotificationService.csproj"
 COPY . .
-WORKDIR "/src/Afisha.NotificationService"
-RUN dotnet build "Afisha.NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "src/Afisha.NotificationService/Afisha.NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "Afisha.NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "src/Afisha.NotificationService/Afisha.NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 WORKDIR /app
