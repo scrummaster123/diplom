@@ -1,6 +1,5 @@
 ﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities.Dto;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Afisha.Web.Controllers;
