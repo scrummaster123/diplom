@@ -4,12 +4,12 @@ WORKDIR /app
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /
-COPY Afisha.NotificationService.csproj .
-COPY ../RabbitMQModels/RabbitMQModels.csproj ../RabbitMQModels/
-RUN dotnet restore "Afisha.NotificationService.csproj"
+WORKDIR /src
+COPY ["src/Afisha.NotificationService/Afisha.NotificationService.csproj", "src/Afisha.NotificationService/"]
+COPY ["src/RabbitMQModels/RabbitMQModels.csproj", "src/RabbitMQModels/"]
+RUN dotnet restore "src/Afisha.NotificationService/Afisha.NotificationService.csproj"
 COPY . .
-WORKDIR "/src/Afisha.NotificationService"
+WORKDIR "/src/src/Afisha.NotificationService"
 RUN dotnet build "Afisha.NotificationService.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
