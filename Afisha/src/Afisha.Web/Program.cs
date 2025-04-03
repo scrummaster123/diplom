@@ -1,6 +1,4 @@
 using Afisha.Infrastructure.Data;
-using System.Reflection;
-using System.Text.Json.Serialization;
 using Afisha.Infrastructure;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;

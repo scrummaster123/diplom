@@ -33,7 +33,7 @@ services:
     networks:
       - myLocalNetwork
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "otus_system" ]
+      test: [ "CMD", "pg_isready", "-U", "otus_system", "-d", "otus_course" ]
       interval: 10s
       timeout: 5s
       retries: 5
