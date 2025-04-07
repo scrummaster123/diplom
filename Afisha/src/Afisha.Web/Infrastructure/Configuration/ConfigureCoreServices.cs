@@ -147,6 +147,7 @@ public static class ConfigureCoreServices
     {
         Log.Logger = new LoggerConfiguration()
             .Enrich.FromLogContext()
+            .MinimumLevel.Error()
             .WriteTo.Console()
             .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
             {

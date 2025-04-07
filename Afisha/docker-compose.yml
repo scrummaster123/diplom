@@ -35,6 +35,34 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    environment:
+      - discovery.type=single-node
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
+      - xpack.security.enabled=false # Отключаем безопасность
+    ports:
+      - "9200:9200"
+    networks:
+      - myLocalNetwork
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.4
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false # Отключаем безопасность
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - myLocalNetwork
       
   afisha.web:
     image: afisha.web
@@ -73,6 +101,7 @@ services:
 
 volumes:
   rabbitmq_data:
+  es_data:
 
 networks:
   myLocalNetwork:

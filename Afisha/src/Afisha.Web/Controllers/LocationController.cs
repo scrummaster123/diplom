@@ -2,6 +2,7 @@ using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Afisha.Web.Controllers;
 
@@ -13,7 +14,6 @@ public class LocationController(ILocationService locationService,  IServiceProvi
     [HttpGet]
     public async Task<OutputLocationFull> Get([FromQuery] long id)
     {
-        
         return await locationService.GetLocationByIdAsync(id, HttpContext.RequestAborted);
     }
     
