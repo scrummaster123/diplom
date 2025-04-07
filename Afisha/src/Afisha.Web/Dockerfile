@@ -6,7 +6,7 @@ EXPOSE 8081
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
+WORKDIR /
 COPY ["src/Afisha.Web/Afisha.Web.csproj", "src/Afisha.Web/"]
 COPY ["src/Afisha.Application/Afisha.Application.csproj", "src/Afisha.Application/"]
 COPY ["src/Afisha.Domain/Afisha.Domain.csproj", "src/Afisha.Domain/"]
@@ -14,7 +14,7 @@ COPY ["src/Afisha.Infrastructure/Afisha.Infrastructure.csproj", "src/Afisha.Infr
 COPY ["src/RabbitMQModels/RabbitMQModels.csproj", "src/RabbitMQModels/"]
 RUN dotnet restore "src/Afisha.Web/Afisha.Web.csproj"
 COPY . .
-WORKDIR "/src/src/Afisha.Web"
+WORKDIR "/src/Afisha.Web"
 RUN dotnet build "Afisha.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

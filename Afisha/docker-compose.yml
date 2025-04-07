@@ -77,6 +77,3 @@ volumes:
 networks:
   myLocalNetwork:
     driver: bridge
-
-
-

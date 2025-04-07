@@ -2,6 +2,7 @@
 using System.Text.Json.Serialization;
 using Afisha.Application;
 using Afisha.Application.Mappers;
+using Afisha.Application.Mappers.UserMappper;
 using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Interfaces.Auth;
@@ -30,10 +31,15 @@ public static class ConfigureCoreServices
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
         services.AddScoped<ILocationService, LocationService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEventService, EventService>();
         services.AddSingleton<AutoMapperConfiguration>();
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
+        services.AddScoped<IEventRepository, EventRepository>();
+        
+        services.AddAutoMapper(typeof(UserMapper));
+
         
         services.AddControllers().AddJsonOptions(options =>
         {
@@ -44,9 +50,15 @@ public static class ConfigureCoreServices
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IJwtOptions, JwtOptions>();
         services.AddScoped<IJwtProvider, JwtProvider>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
         return services;
     }
 
+    public static IServiceCollection RegisterMapperProfiles(this IServiceCollection services)
+    {
+        services.AddAutoMapper(typeof(UserMapper));
+        return services;
+    }
     public static WebApplicationBuilder AddPostgres(this WebApplicationBuilder builder)
     {
         var pgsqlHost = builder.Configuration.GetValue<string>("Postgres:Host");
