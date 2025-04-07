@@ -1,4 +1,5 @@
 ﻿using Afisha.Application.DTO.Inputs;
+using Afisha.Application.Enum;
 using Afisha.Application.Services.Interfaces;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,20 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
         await eventService.CreateEvent(createEvent, HttpContext.RequestAborted);
         
         return Ok("Событие создано");
+    }
+    
+    [HttpGet]
+    [Route("filtered-events")]
+    public async Task<IActionResult> GetEventsByFilter([FromQuery] DateOnly dateStart, [FromQuery] DateOnly dateEnd, 
+        [FromQuery] long? locationId, [FromQuery] long? sponsorId, [FromQuery] OrderByEnum orderBy = OrderByEnum.Default)
+    {
+        var events = await eventService.GetEventsByFilterAsync(dateStart, dateEnd, HttpContext.RequestAborted,
+            locationId, sponsorId, orderBy);
+
+        if (events.Count == 0)
+            return NotFound("События не найдены");
+        
+        return Ok(events);
     }
 }
 

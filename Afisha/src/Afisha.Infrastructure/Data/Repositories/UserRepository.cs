@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Domain.Interfaces.Repositories
 {
-    public class UserRepository(AfishaDbContext context, IUserRepository userRepository) : IUserRepository
+    public class UserRepository(AfishaDbContext context) : IUserRepository
     {
         public async Task<User?> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
         {

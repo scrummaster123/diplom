@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Afisha.Application.DTO.Outputs;
+using Afisha.Application.Mappers;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities;
 using AutoMapper;
