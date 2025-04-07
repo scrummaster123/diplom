@@ -3,11 +3,10 @@ using Afisha.Application.Specifications.User;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
-using AutoMapper;
 
 namespace Afisha.Application.Services.Managers
 {
-    public class UserService(IRepository<User, long> userRepository, IUnitOfWork unitOfWork, IUserRepository userRep, IMapper mapper) : IUserService
+    public class UserService(IRepository<User, long> userRepository, IUnitOfWork unitOfWork, IUserRepository userRep) : IUserService
     {
         /// <summary>
         ///  Добавление нового пользователя 

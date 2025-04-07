@@ -24,6 +24,9 @@ public static class ConfigureCoreServices
 {
     public static IServiceCollection AddCoreServices(this IServiceCollection services)
     {
+        //
+        services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
         services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
         services.AddScoped<ILocationService, LocationService>();
@@ -32,6 +35,9 @@ public static class ConfigureCoreServices
         services.AddSingleton<AutoMapperConfiguration>();
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
+        // 
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();        
         
         services.AddControllers().AddJsonOptions(options =>
         {
