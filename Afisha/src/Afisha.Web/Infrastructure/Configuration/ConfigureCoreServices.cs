@@ -34,6 +34,7 @@ public static class ConfigureCoreServices
         services.AddSingleton<AutoMapperConfiguration>();
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
+        services.AddScoped<IEventRepository, EventRepository>();
         
         services.AddAutoMapper(typeof(UserMapper));
 

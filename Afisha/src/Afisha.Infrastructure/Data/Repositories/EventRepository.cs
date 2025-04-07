@@ -11,6 +11,8 @@ public class EventRepository (AfishaDbContext context) : IEventRepository
     {
         // Базовое получение событий с диапазоном дат
         var events = context.Events
+            .Include(x => x.Sponsor)
+            .Include(x => x.Location)
             .Where(x => x.DateStart >= dateStart 
                         && x.DateStart <= dateEnd)
             .AsNoTracking();

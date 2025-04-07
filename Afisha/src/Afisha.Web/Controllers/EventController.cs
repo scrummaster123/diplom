@@ -41,6 +41,9 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
     {
         var events = await eventService.GetEventsByFilterAsync(dateStart, dateEnd, HttpContext.RequestAborted,
             locationId, sponsorId, orderBy);
+
+        if (events.Count == 0)
+            return NotFound("События не найдены");
         
         return Ok(events);
     }

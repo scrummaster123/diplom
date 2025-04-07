@@ -48,9 +48,6 @@ public class EventService(
             await eventsRepository.GetEventsByFiltersAsync(startDate, endDate, cancellationToken, locationId,
                 sponsorId);
         var result = mapper.Map<List<OutputEvent>>(events);
-
-        if (result.Count == 0)
-            throw new Exception("Не найдены события по заданным фильтрам");
         
         result = OrderBy(result, orderByEnum);
         
