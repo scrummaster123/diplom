@@ -18,11 +18,14 @@ namespace Afisha.Web.Controllers
         [HttpGet]
         public async Task<User> Get()
         {
-            throw new NotImplementedException();
-
-            Log.Error($"run methods {nameof(this.Get)}");
-
             return await _userSomeAction.SomeActionAsync();
+        }
+
+        [HttpGet]
+        [Route("log-test")]
+        public async Task LoggerTest()
+        {
+            throw new NotImplementedException();
         }
     }
 }
