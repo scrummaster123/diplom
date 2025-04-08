@@ -3,6 +3,7 @@ using Afisha.Infrastructure;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -22,6 +23,11 @@ builder.RegisterRabbitMq();
 
 // Добавление Postgresql
 builder.AddPostgres();
+
+// конфигурируем Serilog
+builder.ConfigureSerilog();
+// включаем использование serilog
+builder.Host.UseSerilog();
 
 // Добавление версионирования API
 builder.AddApiVersioning();
@@ -46,6 +52,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+// влключаем логгирование запросов
+app.UseSerilogRequestLogging();
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();

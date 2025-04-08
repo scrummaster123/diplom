@@ -17,6 +17,8 @@ using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.OpenApi.Models;
+using Serilog.Sinks.Elasticsearch;
+using Serilog;
 using static System.Int32;
 
 namespace Afisha.Web.Infrastructure.Configuration;
@@ -137,5 +139,23 @@ public static class ConfigureCoreServices
         return builder;
     }
 
-
+    /// <summary>
+    /// Конфигурирование Serilog
+    /// </summary>
+    /// <param name="builder"></param>
+    public static void ConfigureSerilog(this WebApplicationBuilder builder)
+    {
+        Log.Logger = new LoggerConfiguration()
+            .Enrich.FromLogContext()
+            .MinimumLevel.Error()
+            .WriteTo.Console()
+            .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri("http://localhost:9200"))
+            {
+                IndexFormat = "logs-{0:yyyy.MM.dd}",
+                AutoRegisterTemplate = true,
+                NumberOfShards = 2,
+                NumberOfReplicas = 1
+            })
+            .CreateLogger();
+    }
 }

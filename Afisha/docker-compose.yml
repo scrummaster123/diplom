@@ -3,7 +3,6 @@
 services:
   rabbit:
     image: rabbitmq:3-management
-    restart: always
     hostname: rabbitmqhost
     environment:
       RABBITMQ_DEFAULT_USER: guest
@@ -23,7 +22,6 @@ services:
 
   postgres:
     image: postgres:latest
-    restart: always
     environment:
       POSTGRES_USER: otus_system
       POSTGRES_PASSWORD: otus-123@!
@@ -37,6 +35,34 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    environment:
+      - discovery.type=single-node
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
+      - xpack.security.enabled=false # Отключаем безопасность
+    ports:
+      - "9200:9200"
+    networks:
+      - myLocalNetwork
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.4
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false # Отключаем безопасность - чтобы не возиться со вставкой токена из elastic
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - myLocalNetwork
       
   afisha.web:
     image: afisha.web
@@ -50,7 +76,6 @@ services:
         condition: service_healthy
       postgres:
         condition: service_healthy
-    restart: always
     environment:
       RABBITMQ_HOST: rabbitmqhost
       RABBITMQ_PORT: 5672
@@ -76,6 +101,7 @@ services:
 
 volumes:
   rabbitmq_data:
+  es_data:
 
 networks:
   myLocalNetwork:
