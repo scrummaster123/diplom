@@ -10,7 +10,7 @@ namespace Afisha.Web.Controllers;
 [ApiController]
 [Route("[controller]")]
 
-public class EventController(IEventService eventService, IPublishEndpoint pub, ILogger<EventController> logger) : ControllerBase
+public class EventController(IEventService eventService, IPublishEndpoint pub) : ControllerBase
 {
     [HttpGet]
     public async Task<IActionResult> Get([FromQuery] long id)
@@ -28,16 +28,14 @@ public class EventController(IEventService eventService, IPublishEndpoint pub, I
     [Route("create")]
     public async Task<IActionResult> CreateEvent([FromBody] CreateEvent createEvent)
     {
-        logger.LogInformation($"Create Event: {createEvent.LocationId} {createEvent.SponsorId} {createEvent.DateStart}");
-
         await eventService.CreateEvent(createEvent, HttpContext.RequestAborted);
-        
+
         return Ok("Событие создано");
     }
-    
+
     [HttpGet]
     [Route("filtered-events")]
-    public async Task<IActionResult> GetEventsByFilter([FromQuery] DateOnly dateStart, [FromQuery] DateOnly dateEnd, 
+    public async Task<IActionResult> GetEventsByFilter([FromQuery] DateOnly dateStart, [FromQuery] DateOnly dateEnd,
         [FromQuery] long? locationId, [FromQuery] long? sponsorId, [FromQuery] OrderByEnum orderBy = OrderByEnum.Default)
     {
         var events = await eventService.GetEventsByFilterAsync(dateStart, dateEnd, HttpContext.RequestAborted,
@@ -45,7 +43,7 @@ public class EventController(IEventService eventService, IPublishEndpoint pub, I
 
         if (events.Count == 0)
             return NotFound("События не найдены");
-        
+
         return Ok(events);
     }
 }

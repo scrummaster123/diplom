@@ -25,6 +25,7 @@ namespace Afisha.Web.Controllers
         [Route("log-test")]
         public async Task LoggerTest()
         {
+            Log.Fatal("test fatal error");
             throw new NotImplementedException();
         }
     }

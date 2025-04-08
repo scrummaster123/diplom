@@ -2,13 +2,12 @@ using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Serilog;
 
 namespace Afisha.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class LocationController(ILocationService locationService,  IServiceProvider services) : ControllerBase
+public class LocationController(ILocationService locationService, IServiceProvider services) : ControllerBase
 {
     private IServiceProvider Services { get; } = services;
     [HttpGet]
@@ -16,7 +15,7 @@ public class LocationController(ILocationService locationService,  IServiceProvi
     {
         return await locationService.GetLocationByIdAsync(id, HttpContext.RequestAborted);
     }
-    
+
     [HttpPost]
     [Route("create")]
     public async Task<OutputLocationBase> CreateLocation([FromBody] CreateLocationModel newLocation)
