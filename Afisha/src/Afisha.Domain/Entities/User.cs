@@ -52,6 +52,6 @@ namespace Afisha.Domain.Entities
         /// <summary>
         ///     События пользователя 
         /// </summary>
-        public ICollection<Event> Events { get; set; } = [];
+        public ICollection<EventUser> Events { get; set; } = [];
     }
 }
