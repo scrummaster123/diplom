@@ -23,6 +23,8 @@ public class AfishaDbContext(DbContextOptions<AfishaDbContext> options) : DbCont
     public DbSet<Event> Events => Set<Event>();
 
     public DbSet<Rating> Ratings => Set<Rating>();
+    
+    public DbSet<EventUser> EventUsers => Set<EventUser>();
 
     /// <summary>
     /// UnitOfWork реализация

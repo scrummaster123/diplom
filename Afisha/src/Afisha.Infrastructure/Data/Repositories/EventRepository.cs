@@ -1,4 +1,5 @@
 using Afisha.Domain.Entities;
+using Afisha.Domain.Enums;
 using Afisha.Domain.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +12,7 @@ public class EventRepository (AfishaDbContext context) : IEventRepository
     {
         // Базовое получение событий с диапазоном дат
         var events = context.Events
-            .Include(x => x.Sponsor)
+            .Include(x => x.EventParticipants)
             .Include(x => x.Location)
             .Where(x => x.DateStart >= dateStart 
                         && x.DateStart <= dateEnd)
@@ -21,7 +22,8 @@ public class EventRepository (AfishaDbContext context) : IEventRepository
         if (locationId != null)
             events = events.Where(e => e.LocationId == locationId);
         if (sponsorId != null)
-            events = events.Where(e => e.SponsorId == sponsorId);
+            events = events.Where(e => e.EventParticipants.Any(x => x.UserId == sponsorId
+                                                    && (x.UserRole == EventRole.Manager || x.UserRole == EventRole.Organizer)));
         
         return events.ToListAsync(cancellationToken);
     }

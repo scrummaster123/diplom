@@ -23,6 +23,12 @@ public class EventService(
         var config = autoMapperConfiguration.Configure();
         var iMapper = config.CreateMapper();
         var eventItem = iMapper.Map<CreateEvent, Event>(createEvent);
+        eventItem.EventParticipants.Add(new EventUser
+        {
+            Event = eventItem,
+            UserId = createEvent.SponsorId,
+            UserRole = Domain.Enums.EventRole.Organizer
+        });
         eventRepository.Add(eventItem);
         await unitOfWork.CommitAsync(cancellationToken);
     }
