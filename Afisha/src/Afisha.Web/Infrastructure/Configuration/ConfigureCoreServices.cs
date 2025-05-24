@@ -7,6 +7,7 @@ using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Interfaces.Auth;
 using Afisha.Application.Services.Managers;
+using Afisha.Application.Services.Managers.EventRegistration;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
 using Afisha.Infrastructure;
@@ -37,6 +38,8 @@ public static class ConfigureCoreServices
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
         services.AddScoped<IEventRepository, EventRepository>();
+
+        services.AddScoped<IEventRegistrationRule, EventRegistrationBaseRule>();
         
         services.AddAutoMapper(typeof(UserMapper));
 

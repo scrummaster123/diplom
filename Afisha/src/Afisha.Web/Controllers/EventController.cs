@@ -46,6 +46,19 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
 
         return Ok(events);
     }
+
+    [HttpPost]
+    [Route("request-approval")]
+    public async Task<IActionResult> RequestApproval([FromQuery] long eventId, long userId)
+    {
+        if (await eventService.RegisterToEventAsync(eventId, userId, HttpContext.RequestAborted))
+        {
+            return Ok();
+        }
+
+        return BadRequest("Возникла ошибка. Не удалось зарегистрироваться на мероприятие. Подробнее на почте или в уведомлениях");
+    }
+ 
 }
 
 

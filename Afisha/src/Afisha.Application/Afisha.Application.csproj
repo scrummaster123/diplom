@@ -8,10 +8,12 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
+      <PackageReference Include="MassTransit.Abstractions" Version="8.3.7" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\Afisha.Domain\Afisha.Domain.csproj" />
+        <ProjectReference Include="..\RabbitMQModels\RabbitMQModels.csproj" />
     </ItemGroup>
 
 </Project>

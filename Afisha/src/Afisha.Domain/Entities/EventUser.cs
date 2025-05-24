@@ -20,4 +20,6 @@ public class EventUser
     public User User { get; set; }
     
     public EventRole UserRole { get; set; }
+    
+    public bool IsApproved { get; set; }
 }

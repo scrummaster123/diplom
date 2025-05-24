@@ -78,14 +78,10 @@ namespace Afisha.Application.Services.Managers
         /// <summary>
         /// Метод получения пользователя по email
         /// </summary>
-        public async Task<User> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+        public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         {
             var user = await userRep.GetUserByEmailAsync(email, cancellationToken);
 
-            if (user is null)
-            {
-                return null;
-            }            
             return user;
         }
 
