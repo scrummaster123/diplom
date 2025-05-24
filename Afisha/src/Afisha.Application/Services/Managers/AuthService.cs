@@ -20,16 +20,20 @@ namespace Afisha.Application.Services.Managers
 
             userMap.PasswordHash = hashedPassword;
 
-            if (userService.GetUserByEmailAsync(userMap.Email.ToLowerInvariant(), cancellationToken) != null)
+            if (await userService.GetUserByEmailAsync(userMap.Email.ToLowerInvariant(), cancellationToken) != null)
             {
                 throw new Exception($"Пользователь с email {userMap.Email.ToLowerInvariant()} уже существует");
             }
 
-            if (userService.GetUserByLoginAsync(userMap.Login.ToLowerInvariant(), cancellationToken) != null)
+            if (await userService.GetUserByLoginAsync(userMap.Login.ToLowerInvariant(), cancellationToken) != null)
             {
                 throw new Exception($"Пользователь с логином {userMap.Login.ToLowerInvariant()} уже существует");
             }
 
+            if (userMap.Birthday.HasValue)
+            {
+                userMap.Birthday = DateTime.SpecifyKind(userMap.Birthday.Value, DateTimeKind.Utc);
+            }
             return await userRepository.AddRegisterUserAsync(userMap, cancellationToken);
         }
 

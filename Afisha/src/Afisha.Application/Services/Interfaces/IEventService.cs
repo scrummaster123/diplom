@@ -21,4 +21,13 @@ public interface IEventService
     /// </summary>
     Task<List<OutputEvent>> GetEventsByFilterAsync(DateOnly? dateStart, DateOnly? dateEnd,
         CancellationToken cancellationToken, long? locationId = null, long? sponsorId = null, OrderByEnum orderByEnum = OrderByEnum.Default);
+    
+    /// <summary>
+    ///     Регистрация на мероприятие
+    /// </summary>
+    /// <param name="eventId">Идентификатор мероприятия</param>
+    /// <param name="userEmail">Почта пользователя, который хочет зарегистрироваться</param>
+    /// <param name="cancellationToken">Токен отмены</param>
+    /// <returns>True - удалось зарегистрироваться. False - регистрация не удалась</returns>
+    Task<bool> RegisterToEventAsync(long eventId, long userId, CancellationToken cancellationToken);
 }

@@ -15,7 +15,7 @@ namespace Afisha.Domain.Interfaces.Repositories
         public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         {
             return await context.Users
-            .FirstOrDefaultAsync(u => u.Email == email);
+            .FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
         }
 
         public async Task<bool> AddRegisterUserAsync(User user, CancellationToken cancellationToken)
@@ -26,6 +26,12 @@ namespace Afisha.Domain.Interfaces.Repositories
                 return true;
             }
             return false;            
+        }
+
+        public async Task<User?> GetUserByIdAsync(long userId, CancellationToken cancellationToken)
+        {
+            return await context.Users
+                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
         }
     }
 }

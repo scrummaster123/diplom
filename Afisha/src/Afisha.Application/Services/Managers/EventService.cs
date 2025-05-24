@@ -8,6 +8,12 @@ using Afisha.Application.Mappers;
 using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
+using Afisha.Application.Services.Managers.EventRegistration;
+using Afisha.Domain.Enums;
+using MassTransit;
+using Microsoft.Extensions.Logging;
+using RabbitMQModels;
+using Event = Afisha.Domain.Entities.Event;
 
 namespace Afisha.Application.Services.Managers;
 
@@ -16,7 +22,8 @@ public class EventService(
     IUnitOfWork unitOfWork,
     AutoMapperConfiguration autoMapperConfiguration,
     IEventRepository eventsRepository,
-    IMapper mapper) : IEventService
+    IUserRepository userRepository,
+    IMapper mapper, IEventRegistrationRule eventRegistrationRule, ILogger<EventService> logger) : IEventService
 {
     public async Task CreateEvent(CreateEvent createEvent, CancellationToken cancellationToken)
     {
@@ -58,6 +65,33 @@ public class EventService(
         result = OrderBy(result, orderByEnum);
         
         return result;
+    }
+
+    public async Task<bool> RegisterToEventAsync(long eventId, long userId, CancellationToken cancellationToken)
+    {
+        var checkRegistrationResult = await eventRegistrationRule.CheckRuleAsync(eventId, userId, cancellationToken);
+        if (checkRegistrationResult.IsAllowed)
+        {
+            var @event = await eventRepository.GetByIdOrThrowAsync(eventId, new EventWithUserAndLocation(),
+                cancellationToken: cancellationToken);
+
+            var user = await userRepository.GetUserByIdAsync(userId, cancellationToken);
+            // Добавление пользователя в мероприятие
+            @event.EventParticipants.Add(new EventUser
+            {
+                EventId = eventId,
+                UserId = user.Id,
+                UserRole = EventRole.Guest,
+                IsApproved = @event.IsOpenToRegister
+            });
+            await unitOfWork.CommitAsync(cancellationToken);
+            return true;
+        }
+        
+        logger.LogWarning("Не удалось записать пользователя на мероприятие. Причина: {reason}", 
+            checkRegistrationResult.Reason);
+        
+        return false;
     }
 
     public async Task<OutputEvent> GetEventByIdAsync(long id, CancellationToken cancellationToken)

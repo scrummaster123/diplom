@@ -26,6 +26,15 @@ public class Event : EntityBase<long>
     /// </summary>
     public DateOnly DateStart { get; set; }
 
+    public bool IsOpenToRegister { get; set; }
+    
+    /// <summary>
+    ///     Many to many сущность участников мероприятия с их ролями
+    /// </summary>
     public ICollection<EventUser> EventParticipants { get; set; } = [];
 
+    public override string ToString()
+    {
+        return $"{Id}";
+    }
 }
