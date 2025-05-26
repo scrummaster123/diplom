@@ -1,0 +1,15 @@
+@* Компонент отображения одного события *@
+<div class="event-card">
+    @Title
+</div>
+
+@code {
+
+    [Parameter] public string Title { get; set; }
+
+    [Parameter] public DateTime Date { get; set; }
+
+    [Parameter] public bool IsOpenToRegister { get; set; }
+    [Parameter] public decimal Price { get; set; }
+
+}

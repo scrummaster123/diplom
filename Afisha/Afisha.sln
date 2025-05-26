@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		docker-compose.yml = docker-compose.yml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Afisha.Client", "src\Afisha.Client\Afisha.Client.csproj", "{B78646A8-BD80-421E-A8B4-1FA8E3399C28}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{6448D3A8-6A23-4822-A31E-38822E9907A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6448D3A8-6A23-4822-A31E-38822E9907A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6448D3A8-6A23-4822-A31E-38822E9907A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B78646A8-BD80-421E-A8B4-1FA8E3399C28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B78646A8-BD80-421E-A8B4-1FA8E3399C28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B78646A8-BD80-421E-A8B4-1FA8E3399C28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B78646A8-BD80-421E-A8B4-1FA8E3399C28}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

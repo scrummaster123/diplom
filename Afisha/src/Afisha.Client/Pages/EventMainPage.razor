@@ -1,0 +1,28 @@
+@page "/events"
+<h3>Events</h3>
+
+<div class="events-container">
+    <div class="events-filters">
+        <label>
+            Дата фильтр (диапазон):
+            <input type="date" @bind="StartDate" /> -
+            <input type="date" @bind="EndDate" />
+        </label>
+        <label style="margin-left: 2rem;">
+            Тип отдыха:
+            <input type="checkbox" @bind="IsVacation" /> Отдых
+        </label>
+    </div>
+    <div class="events-list">
+        @if (FilteredEvents != null)
+        {
+            @foreach (var evt in FilteredEvents)
+            {
+                <EventCard Title="@evt.Title"
+                           Date="@evt.Date"
+                           IsOpenToRegister="@evt.IsOpenToRegister"
+                           Price="@evt.Price" />
+            }
+        }
+    </div>
+</div>

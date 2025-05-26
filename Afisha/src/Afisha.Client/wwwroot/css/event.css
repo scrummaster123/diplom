@@ -1,0 +1,23 @@
+.event-card {
+    border: 2px solid #222;
+    padding: 1rem;
+    background: #fafafa;
+    min-height: 120px;
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.event-title {
+    font-weight: bold;
+    font-size: 1.15rem;
+    margin-bottom: 0.6rem;
+}
+.event-date, .event-price, .event-status {
+    font-size: 0.95rem;
+    margin-bottom: 0.3rem;
+}
+.event-status {
+    font-style: italic;
+    color: #457b9d;
+}
