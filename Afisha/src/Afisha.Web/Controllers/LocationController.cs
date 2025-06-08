@@ -25,4 +25,9 @@ public class LocationController(ILocationService locationService, IServiceProvid
         var result = await locationService.CreateLocation(newLocation, HttpContext.RequestAborted);
         return result;
     }
+
+    [HttpGet]
+    [Route("search")]
+    public async Task<IEnumerable<OutputLocationBase>> Search([FromQuery] string search) =>
+        await locationService.GetBySearchString(search);
 }
