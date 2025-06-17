@@ -1,5 +1,4 @@
 services:
-
   db:
     image: postgres
     restart: no
@@ -28,15 +27,15 @@ services:
     networks:
       - afisha
 
-  afisha:
-    image: afisha_otus:latest
+  afisha.web:
+    image: ${DOCKER_REGISTRY-}afishaweb
+    build:
+      context: .
+      dockerfile: src/Afisha.Web/Dockerfile
     restart: no
     ports:
       - '8080:8080'
       - '8081:8081'
-    build:
-      context: .
-      dockerfile: Dockerfile
     depends_on: 
       - db
     networks:
