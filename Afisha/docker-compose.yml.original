@@ -1,3 +1,5 @@
+﻿version: '3.5'
+
 services:
   rabbit:
     image: rabbitmq:3-management
@@ -63,7 +65,7 @@ services:
       - myLocalNetwork
       
   afisha.web:
-    image: ${DOCKER_REGISTRY-}afishaweb
+    image: afisha.web
     build:
       context: .
       dockerfile: src/Afisha.Web/Dockerfile
@@ -104,4 +106,3 @@ volumes:
 networks:
   myLocalNetwork:
     driver: bridge
-
