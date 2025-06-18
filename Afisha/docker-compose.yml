@@ -13,7 +13,7 @@ services:
     networks:
       - myLocalNetwork
     healthcheck:
-      test: [ "CMD", "rabbitmqctl", "status" ]
+      test: ["CMD", "rabbitmqctl", "status"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -29,39 +29,11 @@ services:
     networks:
       - myLocalNetwork
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "otus_system", "-d", "otus_course" ]
+      test: ["CMD", "pg_isready", "-U", "otus_system", "-d", "otus_course"]
       interval: 10s
       timeout: 5s
       retries: 5
 
-  # Elasticsearch
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
-    environment:
-      - discovery.type=single-node
-      - ELASTICSEARCH_USERNAME=elastic
-      - ELASTICSEARCH_PASSWORD=elastic
-      - xpack.security.enabled=false # Отключаем безопасность
-    ports:
-      - "9200:9200"
-    networks:
-      - myLocalNetwork
-    volumes:
-      - es_data:/usr/share/elasticsearch/data
-
-  # Kibana
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.17.4
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - xpack.security.enabled=false # Отключаем безопасность - чтобы не возиться со вставкой токена из elastic
-    ports:
-      - "5601:5601"
-    depends_on:
-      - elasticsearch
-    networks:
-      - myLocalNetwork
-      
   afisha.web:
     image: ${DOCKER_REGISTRY-}afishaweb
     build:
@@ -81,7 +53,7 @@ services:
       RABBITMQ_PASS: guest
       ASPNETCORE_ENVIRONMENT: Docker
     ports:
-      - "5182:8080" 
+      - "5182:8080"
 
   afisha.notificationservice:
     image: afisha.notificationservice
@@ -96,6 +68,19 @@ services:
     environment:
       WORKING_SETTINGS: Docker
 
+  afisha.react:
+    image: afisha.react
+    build:
+      context: ./src/Afisha.React
+      dockerfile: Dockerfile
+    networks:
+      - myLocalNetwork
+    ports:
+      - "8080:80"
+    depends_on:
+      - afisha.web
+    environment:
+      VITE_API_URL: http://afisha.web:8080 # Если фронтенд делает запросы к бэкенду
 
 volumes:
   rabbitmq_data:
@@ -104,4 +89,3 @@ volumes:
 networks:
   myLocalNetwork:
     driver: bridge
-
