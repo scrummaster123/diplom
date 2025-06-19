@@ -10,54 +10,49 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
-// Можно для соответствия RFC 7807
-builder.Services.AddProblemDetails(); 
+builder.Services.AddProblemDetails();
 
 // Добавление основных сервисов
 builder.Services.AddCoreServices();
 builder.Services.RegisterMapperProfiles();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
-//  Регистрация в сервисах RabbitMQ
+// Регистрация RabbitMQ
 builder.RegisterRabbitMq();
 
-// Добавление Postgresql
+// Добавление PostgreSQL
 builder.AddPostgres();
 
-// конфигурируем Serilog
+// Конфигурируем Serilog
 builder.ConfigureSerilog();
-// включаем использование serilog
 builder.Host.UseSerilog();
 
 // Добавление версионирования API
 builder.AddApiVersioning();
-// Добавление сваггера
+// Добавление Swagger
 builder.AddSwagger();
-
 
 var app = builder.Build();
 
 app.UseExceptionHandler();
 
 // Configure the HTTP request pipeline.
+
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Afisha API v1");
-    options.RoutePrefix = string.Empty; // Set the Swagger UI at the root URL
+    options.RoutePrefix = string.Empty;
 });
 
-app.UseHttpsRedirection();
+app.UseSerilogRequestLogging();
 
 app.UseAuthorization();
 
 app.MapControllers();
-// влключаем логгирование запросов
-app.UseSerilogRequestLogging();
 
 using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
 db.Database.Migrate();
 
 app.Run();
-

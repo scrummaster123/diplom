@@ -62,30 +62,21 @@ namespace Afisha.Application.Services.Managers
         /// <summary>
         /// Метод получения пользователя по логину 
         /// </summary>
-        public async Task<User> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
+        public async Task<User?> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
         {
             login = login.ToLowerInvariant();
 
             var user = await userRep.GetUserByLoginAsync(login, cancellationToken);
 
-            if (user is null)
-            {
-                return null;
-            }           
             return user;
         }
 
         /// <summary>
         /// Метод получения пользователя по email
         /// </summary>
-        public async Task<User> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+        public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         {
             var user = await userRep.GetUserByEmailAsync(email, cancellationToken);
-
-            if (user is null)
-            {
-                return null;
-            }            
             return user;
         }
 

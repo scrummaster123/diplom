@@ -1,12 +1,14 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.Services.Interfaces.Auth;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Afisha.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [AllowAnonymous]
     public class AuthController(IAuthService authService) : Controller
     {
         [HttpPost]

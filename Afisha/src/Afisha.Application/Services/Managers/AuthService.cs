@@ -2,13 +2,14 @@
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Interfaces.Auth;
 using Afisha.Domain.Entities;
+using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
 using Afisha.Infrastructure;
 using AutoMapper;
 
 namespace Afisha.Application.Services.Managers
 {
-    public class AuthService(IUserService userService, IUserRepository userRepository, IJwtProvider jwtProvider, IPasswordHasher passwordHasher, IMapper mapper) : IAuthService
+    public class AuthService(IUserService userService, IUserRepository userRepository, IJwtProvider jwtProvider, IPasswordHasher passwordHasher, IMapper mapper, IUnitOfWork unitOfWork) : IAuthService
     {
         public async Task<bool> UserRegistrationAsync(RegistrationUserModel userModel, CancellationToken cancellationToken)
         {
@@ -20,17 +21,26 @@ namespace Afisha.Application.Services.Managers
 
             userMap.PasswordHash = hashedPassword;
 
-            if (userService.GetUserByEmailAsync(userMap.Email.ToLowerInvariant(), cancellationToken) != null)
+            User? user = await userService.GetUserByEmailAsync(userMap.Email.ToLowerInvariant(), cancellationToken);
+
+            if (user != null)
             {
                 throw new Exception($"Пользователь с email {userMap.Email.ToLowerInvariant()} уже существует");
             }
 
-            if (userService.GetUserByLoginAsync(userMap.Login.ToLowerInvariant(), cancellationToken) != null)
+            user = await userService.GetUserByLoginAsync(userMap.Login.ToLowerInvariant(), cancellationToken);
+
+            if (user != null)
             {
                 throw new Exception($"Пользователь с логином {userMap.Login.ToLowerInvariant()} уже существует");
             }
 
-            return await userRepository.AddRegisterUserAsync(userMap, cancellationToken);
+            var result = await userRepository.AddRegisterUserAsync(userMap, cancellationToken);
+
+            if (result)
+                await unitOfWork.CommitAsync(cancellationToken);
+
+            return result;
         }
 
         public async Task<string> LoginAsync(string email, string password, CancellationToken cancellationToken)
