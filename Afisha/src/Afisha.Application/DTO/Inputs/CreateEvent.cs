@@ -16,4 +16,14 @@ public class CreateEvent
     /// Дата начала мероприятия
     /// </summary>
     public DateOnly DateStart { get; set; }
+    
+    /// <summary>
+    /// Открытая ли регистрация на мероприятие
+    /// </summary>
+    public bool IsOpenToRegister { get; set; }
+
+    /// <summary>
+    ///     Описание мероприятия
+    /// </summary>
+    public string Description { get; set; } = string.Empty;
 }

@@ -5,13 +5,15 @@ using Afisha.Application.Specifications.Location;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
+using AutoMapper;
 
 namespace Afisha.Application.Services.Managers;
 
 public class LocationService(
     IRepository<Location, long> locationRepository,
     IRepository<User, long> userRepository,
-    IUnitOfWork unitOfWork) : ILocationService
+    IUnitOfWork unitOfWork,
+    ILocationRepository locationRepo, IMapper mapper) : ILocationService
 {
     /// <summary>
     ///     Получение общей информации о локации по идентификатору
@@ -79,5 +81,12 @@ public class LocationService(
 
         // В случае, если верхний if не отработал, выбрасывается исключение с общим описанием для пользователя
         throw new Exception("Не удалось добавить локацию");
+    }
+
+    public async Task<List<OutputLocationBase>> GetLocations(CancellationToken cancellationToken)
+    {
+        var dbLocations = await locationRepo.GetLocationsAsync(cancellationToken);
+        var result = mapper.Map<List<OutputLocationBase>>(dbLocations);
+        return result;
     }
 }

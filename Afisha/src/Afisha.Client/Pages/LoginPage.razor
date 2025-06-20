@@ -1,0 +1,89 @@
+@page "/login"
+
+<MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="mt-16">
+    <MudPaper Elevation="3" Class="pa-8">
+        <MudStack Spacing="4" AlignItems="AlignItems.Center">
+            <!-- Заголовок -->
+            <MudIcon Icon="@Icons.Material.Filled.Login" Size="Size.Large" Color="Color.Primary" />
+            <MudText Typo="Typo.h4" Align="Align.Center">Вход в систему</MudText>
+            <MudText Typo="Typo.body2" Align="Align.Center" Color="Color.Secondary">
+                Введите ваши данные для входа
+            </MudText>
+        </MudStack>
+
+        <MudForm @ref="form" Model="@loginModel" @bind-IsValid="@isFormValid" Class="mt-6">
+            <MudStack Spacing="4">
+                <!-- Email -->
+                <MudTextField @bind-Value="loginModel.Email"
+                              For="@(() => loginModel.Email)"
+                              Label="Email"
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              InputType="InputType.Email"
+                              Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.Email"
+                              FullWidth="true" />
+
+                <!-- Пароль -->
+                <MudTextField @bind-Value="loginModel.Password"
+                              For="@(() => loginModel.Password)"
+                              Label="Пароль"
+                              Variant="Variant.Outlined"
+                              Required="true"
+                              InputType="@passwordInput"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@passwordInputIcon"
+                              OnAdornmentClick="TogglePasswordVisibility"
+                              AdornmentAriaLabel="Показать пароль"
+                              FullWidth="true" />
+
+                <!-- Чекбокс "Запомнить меня" (опционально) -->
+                <MudCheckBox @bind-Value="rememberMe" 
+                             Label="Запомнить меня" 
+                             Color="Color.Primary" />
+
+                <!-- Кнопка входа -->
+                <MudButton Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           Size="Size.Large"
+                           FullWidth="true"
+                           OnClick="Submit"
+                           Disabled="@(!isFormValid || isSubmitting)"
+                           Class="mt-4">
+                    @if (isSubmitting)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                        <MudText Class="ms-2">Вход...</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Войти</MudText>
+                    }
+                </MudButton>
+
+                <!-- Дополнительные ссылки -->
+                <MudStack Row="true" Justify="Justify.SpaceBetween" Class="mt-2">
+                    <MudLink Href="/forgot-password" Typo="Typo.body2">
+                        Забыли пароль?
+                    </MudLink>
+                    <MudLink Href="/registration" Typo="Typo.body2">
+                        Регистрация
+                    </MudLink>
+                </MudStack>
+            </MudStack>
+        </MudForm>
+
+        @if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <MudAlert Severity="Severity.Error" Class="mt-4" ShowCloseIcon="true" CloseIconClicked="@(() => errorMessage = string.Empty)">
+                @errorMessage
+            </MudAlert>
+        }
+    </MudPaper>
+
+    <!-- Дополнительная информация -->
+    <MudText Typo="Typo.caption" Align="Align.Center" Class="mt-4" Color="Color.Secondary">
+        Нет аккаунта? 
+        <MudLink Href="/registration">Зарегистрируйтесь здесь</MudLink>
+    </MudText>
+</MudContainer>

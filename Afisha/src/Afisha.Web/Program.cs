@@ -17,7 +17,16 @@ builder.Services.AddProblemDetails();
 builder.Services.AddCoreServices();
 builder.Services.RegisterMapperProfiles();
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
-
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClientPermissionCombined", policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(_ => true)
+            .AllowCredentials();
+    });
+});
 //  Регистрация в сервисах RabbitMQ
 builder.RegisterRabbitMq();
 
@@ -47,6 +56,8 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty; // Set the Swagger UI at the root URL
 });
 
+// Установка зарегистрированной Cors policy
+app.UseCors("ClientPermissionCombined");
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

@@ -3,7 +3,7 @@ using Afisha.Application.DTO.Outputs;
 using Afisha.Domain.Entities;
 using AutoMapper;
 
-namespace Afisha.Application.Mappers.UserMappper
+namespace Afisha.Application.Mappers.AfishaMappers
 {
     public class UserMapper : Profile
     {
@@ -32,8 +32,12 @@ namespace Afisha.Application.Mappers.UserMappper
             CreateMap<User, OutputMiniUserModel>()
 
                 .ForMember(dest => dest.FullName,
-                opt => opt.MapFrom(src => $"{src.FirstName} {src.LastName}")); // Здесь поле мини-модели FullName составляю из полей Имя/Фамилия сущности User
-            
+                opt =>
+                    opt.MapFrom(src => $"{src.FirstName} {src.LastName}"))
+                .ForMember(dest => dest.Id,
+                    opt =>
+                        opt.MapFrom(src => src.Id))
+                ; // Здесь поле мини-модели FullName составляю из полей Имя/Фамилия сущности User
 
 
             // Маппинг User в OutputFullUserModel

@@ -1,34 +1,110 @@
+using System.Net.Http.Json;
+using System.Text;
+using System.Text.Json;
+using Afisha.Application.DTO.Outputs;
+using Afisha.Client.Events;
+using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 
-namespace BlazorApp1.Pages;
+namespace Afisha.Client.Pages;
 
 public partial class EventMainPage : ComponentBase
 {
-    public class EventModel
+    protected bool IsVacation { get; set; }
+   
+
+    [Inject] protected HttpClient Http { get; set; }
+    [Inject] private ILocalStorageService LocalStorage { get; set; }
+
+
+    protected List<OutputEvent> AllEvents { get; set; } = new();
+    protected List<OutputEvent> FilteredEvents { get; set; } = new();
+
+    private DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(5).Date);
+
+    protected DateRange CurrentDateRange => _dateRange;
+
+    public async Task SetDateRange(DateRange value)
     {
-        public string Title { get; set; }
-        public DateTime Date { get; set; }
-        public bool IsOpenToRegister { get; set; }
-        public decimal Price { get; set; }
-        public bool IsVacation { get; set; }
+        _dateRange = value;
+        await ApplyFilters();
+    }
+        
+    protected List<OutputLocationBase> Locations { get; set; } = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Получение данных
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        await GetEvents();
     }
 
-    protected DateTime? StartDate { get; set; }
-    protected DateTime? EndDate { get; set; }
-    protected bool IsVacation { get; set; }
-
-    // Пример событий
-    protected List<EventModel> AllEvents = new()
+    private async Task GetEvents()
     {
-        new() { Title = "Event1", Date = DateTime.Today.AddDays(3), IsOpenToRegister = true, Price = 1000, IsVacation = true },
-        new() { Title = "Event2", Date = DateTime.Today.AddDays(7), IsOpenToRegister = false, Price = 500, IsVacation = false },
-        new() { Title = "Event3", Date = DateTime.Today.AddDays(10), IsOpenToRegister = true, Price = 0, IsVacation = true },
-        new() { Title = "Event4", Date = DateTime.Today.AddDays(14), IsOpenToRegister = false, Price = 2000, IsVacation = false }
-    };
+        var baseUrl = "http://localhost:5182";
+        var endpointEvents = "/Event/filtered-events";
 
-    protected List<EventModel> FilteredEvents => AllEvents
-        .Where(e => (!StartDate.HasValue || e.Date >= StartDate)
-                    && (!EndDate.HasValue || e.Date <= EndDate)
-                    && (!IsVacation || e.IsVacation))
-        .ToList();
+        var queryEvents = new StringBuilder("?");
+        if (CurrentDateRange.Start.HasValue)
+            queryEvents.Append($"dateStart={CurrentDateRange.Start.Value:yyyy-MM-dd}&dateEnd={CurrentDateRange.End:yyyy-MM-dd}");
+        Console.WriteLine(_dateRange.End);
+        Console.WriteLine(_dateRange.Start);
+        var urlForEvents = $"{baseUrl}{endpointEvents}{queryEvents}";
+
+        try
+        {
+            AllEvents = await Http.GetFromJsonAsync<List<OutputEvent>>(urlForEvents);
+        }
+        catch (Exception ex)
+        {
+            // Обработка ошибок (можно вывести пользователю)
+            Console.WriteLine($"Ошибка загрузки событий: {ex.Message}");
+            AllEvents = new List<OutputEvent>(); // или как-то иначе обработать ошибку
+        }
+    }
+
+    protected async Task ApplyFilters()
+    {
+        await GetEvents();
+        FilteredEvents = AllEvents
+            .Where(e =>
+                (!CurrentDateRange.Start.HasValue || e.DateStart.ToDateTime(TimeOnly.MinValue) >= CurrentDateRange.Start.Value) &&
+                (!CurrentDateRange.End.HasValue || e.DateStart.ToDateTime(TimeOnly.MinValue) <= CurrentDateRange.End.Value) &&
+                (!IsVacation || e.IsOpenToRegister == IsVacation))
+            .ToList();
+        StateHasChanged();
+    }
+    
+    [Inject]
+    private NavigationManager NavigationManager { get; set; }
+
+    private EventCallback<DataGridRowClickEventArgs<OutputEvent>> OnRowClickHandler => 
+        EventCallback.Factory.Create<DataGridRowClickEventArgs<OutputEvent>>(this, RowClickEvent);
+    private void RowClickEvent(DataGridRowClickEventArgs<OutputEvent> args)
+    {
+        // Навигация на страницу деталей мероприятия
+        // Предполагается, что у EventModel есть свойство Id
+        var eventId = args.Item.Id;
+        NavigationManager.NavigateTo($"/event/{eventId}");
+    }
+    
+    [Inject] protected IDialogService DialogService { get; set; }
+
+    private async Task OnCreateClickHandler()
+    {
+        var dialog = DialogService.Show<CreateEventPopup>("Создать мероприятие");
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+            await ApplyFilters();
+        }
+    }
+    
+    private async Task OnIsVacationChanged(bool value)
+    {
+        IsVacation = value;
+        await ApplyFilters();
+    }
 }

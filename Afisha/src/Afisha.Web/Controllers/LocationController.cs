@@ -11,18 +11,26 @@ public class LocationController(ILocationService locationService, IServiceProvid
 {
     private IServiceProvider Services { get; } = services;
     [HttpGet]
-    public async Task<OutputLocationFull> Get([FromQuery] long id)
+    public async Task<ActionResult<OutputLocationFull>> Get([FromQuery] long id)
     {
         return await locationService.GetLocationByIdAsync(id, HttpContext.RequestAborted);
     }
 
     [HttpPost]
     [Route("create")]
-    public async Task<OutputLocationBase> CreateLocation([FromBody] CreateLocationModel newLocation)
+    public async Task<ActionResult<OutputLocationBase>> CreateLocation([FromBody] CreateLocationModel newLocation)
     {
         //TODO Нужно будет добавить в инфрасруктуру какой-нибудь сервис-экстрактор токена
 
         var result = await locationService.CreateLocation(newLocation, HttpContext.RequestAborted);
         return result;
+    }
+
+    [HttpGet]
+    [Route("all")]
+    public async Task<ActionResult<OutputLocationBase>> GetLocations()
+    {
+        var result = await locationService.GetLocations(HttpContext.RequestAborted);
+        return Ok(result);
     }
 }

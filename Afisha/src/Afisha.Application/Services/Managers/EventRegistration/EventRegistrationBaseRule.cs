@@ -26,7 +26,7 @@ public class EventRegistrationBaseRule(IEventRepository eventsRepository,
             return new Message
             {
                 Reason = $"Пользователь с идентификатором {userId} не найден. ",
-                IsAllowed = false
+                RequestStatus = RegistrationStatusEnum.CantRegister
             };
         }
         
@@ -35,7 +35,7 @@ public class EventRegistrationBaseRule(IEventRepository eventsRepository,
             return new Message
             {
                 Reason = $"Пользователь уже зарегистрирован на мероприятие {@event}",
-                IsAllowed = false
+                RequestStatus = RegistrationStatusEnum.AlreadyExists
             };
         }
         
@@ -48,25 +48,19 @@ public class EventRegistrationBaseRule(IEventRepository eventsRepository,
             {
                 throw new Exception("Не удалось зарегистрироваться на мероприятие");
             }
-            var emailMessage = new EmailMessage
-            {
-                Content = $"Пользователь {user.Login} отправляет заявку на участие в мероприятии.",
-                Email = email
-            };
-
-            await rabbitService.Publish(emailMessage, cancellationToken);
-
+            
             return new Message
             {
                 Reason = "Организатору отправлена заявка на участие в мероприятии",
-                IsAllowed = false,
+                RequestStatus = RegistrationStatusEnum.ClosedRegistration,
                 ApproveAdvice = "Вы можете написать организатору для участия"
             };
         }
  
         return new Message
         {
-            IsAllowed = true,
+            Reason = "Успешная регистрация на мероприятие",
+            RequestStatus = RegistrationStatusEnum.OpenRegistration
         };
     }
 }

@@ -16,7 +16,7 @@ namespace Afisha.Application.Services.Interfaces.Auth
         {
             Claim[] claims = [new("userId", user.Id.ToString()), new("email", user.Email), new("login", user.Login)];
 
-            var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)), SecurityAlgorithms.HmacSha256);
+            var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes("ultraSecret1@323ddsaf54$$$%5%623")), SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 claims: claims,

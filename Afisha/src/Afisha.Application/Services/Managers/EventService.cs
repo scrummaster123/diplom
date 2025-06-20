@@ -23,7 +23,10 @@ public class EventService(
     AutoMapperConfiguration autoMapperConfiguration,
     IEventRepository eventsRepository,
     IUserRepository userRepository,
-    IMapper mapper, IEventRegistrationRule eventRegistrationRule, ILogger<EventService> logger) : IEventService
+    IMapper mapper,
+    IEventRegistrationRule eventRegistrationRule,
+    ILogger<EventService> logger,
+    IPublishEndpoint rabbitService) : IEventService
 {
     public async Task CreateEvent(CreateEvent createEvent, CancellationToken cancellationToken)
     {
@@ -61,21 +64,37 @@ public class EventService(
             await eventsRepository.GetEventsByFiltersAsync(startDate, endDate, cancellationToken, locationId,
                 sponsorId);
         var result = mapper.Map<List<OutputEvent>>(events);
-        
+
         result = OrderBy(result, orderByEnum);
-        
+
         return result;
     }
 
-    public async Task<bool> RegisterToEventAsync(long eventId, long userId, CancellationToken cancellationToken)
+    public async Task<Message> RegisterToEventAsync(long eventId, long userId, CancellationToken cancellationToken)
     {
         var checkRegistrationResult = await eventRegistrationRule.CheckRuleAsync(eventId, userId, cancellationToken);
-        if (checkRegistrationResult.IsAllowed)
-        {
-            var @event = await eventRepository.GetByIdOrThrowAsync(eventId, new EventWithUserAndLocation(),
-                cancellationToken: cancellationToken);
 
+        var @event = await eventRepository.GetByIdOrThrowAsync(eventId, new EventWithUserAndLocation(),
+            cancellationToken: cancellationToken);
+
+        if (checkRegistrationResult.RequestStatus == RegistrationStatusEnum.OpenRegistration ||
+            checkRegistrationResult.RequestStatus == RegistrationStatusEnum.ClosedRegistration)
+        {
             var user = await userRepository.GetUserByIdAsync(userId, cancellationToken);
+            
+            if (user is null)
+                throw new Exception($"Пользователь с идентификатором {userId} не найден");
+            
+            if (!@event.IsOpenToRegister)
+            {
+                var emailMessage = new EmailMessage
+                {
+                    Content = $"Пользователь {user.Login} отправляет заявку на участие в мероприятии.",
+                    Email = user.Email
+                };
+                await rabbitService.Publish(emailMessage, cancellationToken);
+            }
+
             // Добавление пользователя в мероприятие
             @event.EventParticipants.Add(new EventUser
             {
@@ -85,13 +104,9 @@ public class EventService(
                 IsApproved = @event.IsOpenToRegister
             });
             await unitOfWork.CommitAsync(cancellationToken);
-            return true;
         }
-        
-        logger.LogWarning("Не удалось записать пользователя на мероприятие. Причина: {reason}", 
-            checkRegistrationResult.Reason);
-        
-        return false;
+
+        return checkRegistrationResult;
     }
 
     public async Task<OutputEvent> GetEventByIdAsync(long id, CancellationToken cancellationToken)
@@ -100,7 +115,19 @@ public class EventService(
         var iMapper = config.CreateMapper();
         var eventItem = await eventRepository.GetByIdOrThrowAsync(id, new EventWithUserAndLocation(),
             Domain.Enums.TrackingType.NoTracking, cancellationToken);
+
+        var @event = await eventsRepository.GetEventByIdAsync(id, cancellationToken);
+
+        if (@event is not null && @event.IsOpenToRegister)
+        {
+            var participants = await eventsRepository.GetEventParticipantsAsync(id, cancellationToken);
+            @event.EventParticipants.ToList().AddRange(participants);
+        }
+
         var outputEvent = iMapper.Map<Event, OutputEvent>(eventItem);
+        var sponsor = await eventsRepository.GetSponsorByEventIdAsync(id, cancellationToken);
+        if (sponsor is not null)
+            outputEvent.Sponsor = iMapper.Map<User, OutputEventUser>(sponsor);
         return outputEvent;
     }
 

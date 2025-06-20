@@ -1,4 +1,5 @@
 ﻿using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
 using Afisha.Application.Services.Interfaces;
 using MassTransit;
@@ -10,16 +11,11 @@ namespace Afisha.Web.Controllers;
 [ApiController]
 [Route("[controller]")]
 
-public class EventController(IEventService eventService, IPublishEndpoint pub) : ControllerBase
+public class EventController(IEventService eventService) : ControllerBase
 {
-    [HttpGet]
-    public async Task<IActionResult> Get([FromQuery] long id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<OutputEvent>> Get(long id)
     {
-        await pub.Publish(new EmailMessage
-        {
-            Content = DateTime.Now.ToLongDateString(),
-            Email = "user@mail.ri"
-        });
         var eventItem = await eventService.GetEventByIdAsync(id, HttpContext.RequestAborted);
         return Ok(eventItem);
     }
@@ -35,7 +31,7 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
 
     [HttpGet]
     [Route("filtered-events")]
-    public async Task<IActionResult> GetEventsByFilter([FromQuery] DateOnly dateStart, [FromQuery] DateOnly dateEnd,
+    public async Task<ActionResult<List<OutputEvent>>> GetEventsByFilter([FromQuery] DateOnly? dateStart, [FromQuery] DateOnly? dateEnd,
         [FromQuery] long? locationId, [FromQuery] long? sponsorId, [FromQuery] OrderByEnum orderBy = OrderByEnum.Default)
     {
         var events = await eventService.GetEventsByFilterAsync(dateStart, dateEnd, HttpContext.RequestAborted,
@@ -49,14 +45,10 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
 
     [HttpPost]
     [Route("request-approval")]
-    public async Task<IActionResult> RequestApproval([FromQuery] long eventId, long userId)
+    public async Task<ActionResult<string>> RequestApproval([FromQuery] long eventId, long userId)
     {
-        if (await eventService.RegisterToEventAsync(eventId, userId, HttpContext.RequestAborted))
-        {
-            return Ok();
-        }
-
-        return BadRequest("Возникла ошибка. Не удалось зарегистрироваться на мероприятие. Подробнее на почте или в уведомлениях");
+        var registerMessage = await eventService.RegisterToEventAsync(eventId, userId, HttpContext.RequestAborted);
+        return Ok(registerMessage.Reason);
     }
  
 }

@@ -14,4 +14,9 @@ public interface ILocationService
     ///     Создание новой локации
     /// </summary>
     Task<OutputLocationBase> CreateLocation(CreateLocationModel location, CancellationToken cancellationToken);
+    
+    /// <summary>
+    ///     Создание новой локации
+    /// </summary>
+    Task<List<OutputLocationBase>> GetLocations(CancellationToken cancellationToken);
 }

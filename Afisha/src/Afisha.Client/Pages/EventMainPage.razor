@@ -1,28 +1,26 @@
 @page "/events"
-<h3>Events</h3>
 
-<div class="events-container">
-    <div class="events-filters">
-        <label>
-            Дата фильтр (диапазон):
-            <input type="date" @bind="StartDate" /> -
-            <input type="date" @bind="EndDate" />
-        </label>
-        <label style="margin-left: 2rem;">
-            Тип отдыха:
-            <input type="checkbox" @bind="IsVacation" /> Отдых
-        </label>
-    </div>
-    <div class="events-list">
-        @if (FilteredEvents != null)
-        {
-            @foreach (var evt in FilteredEvents)
-            {
-                <EventCard Title="@evt.Title"
-                           Date="@evt.Date"
-                           IsOpenToRegister="@evt.IsOpenToRegister"
-                           Price="@evt.Price" />
-            }
-        }
-    </div>
-</div>
+<MudGrid>
+    <MudItem xs="12">
+        <MudStack Row="true">
+            <MudDateRangePicker Label="Basic range picker" DateRange="CurrentDateRange" 
+                                DateRangeChanged="SetDateRange" />
+            <MudCheckBox ValueChanged="@((bool v) => OnIsVacationChanged(v))"
+                         Value="IsVacation" Label="Открытый отдых" LabelPlacement="Placement.Start" Color="Color.Primary" />
+        </MudStack>
+    </MudItem>
+    
+    <MudItem xs="12">
+        <MudDataGrid Items="@FilteredEvents" Hover="true" RowClick="@OnRowClickHandler" Class="cursor-pointer">
+            <Columns>
+                <PropertyColumn Property="x => x.DateStart" Title="Дата проведения" />
+                <PropertyColumn Property="x => x.Location.Name" Title="Место" />
+                <PropertyColumn Property="x => x.Sponsor.FirstName" Title="Организатор мероприятия"/>
+            </Columns>
+        </MudDataGrid>
+    </MudItem>
+    
+    <MudItem xs="12" Class="d-flex justify-end mt-4">
+        <MudButton OnClick="OnCreateClickHandler" Variant="Variant.Filled" Color="Color.Primary" Size="Size.Large" StartIcon="@Icons.Material.Filled.Add">Создать</MudButton>
+    </MudItem>
+</MudGrid>

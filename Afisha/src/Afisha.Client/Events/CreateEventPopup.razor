@@ -1,0 +1,49 @@
+@inject ISnackbar Snackbar
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.Event" Class="mr-3" />
+            Создание нового мероприятия
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="form" Model="@eventModel" @bind-IsValid="@isValid">
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudDatePicker Label="Дата проведения" @bind-Date="dateStart" 
+                                  Required="true" RequiredError="Дата обязательна" />
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudSelect T="OutputLocationBase" Label="Место проведения" @bind-Value="SelectedLocation"
+                              Required="true" RequiredError="Выберите место проведения">
+                        @foreach (var location in locations)
+                        {
+                            <MudSelectItem Value="@location">@location.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudSelect T="OutputMiniUserModel" Label="Организатор" @bind-Value="Author"
+                              Required="true" RequiredError="Выберите организатора">
+                    </MudSelect>
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="eventModel.Description" Label="Описание" 
+                                 Lines="3" Variant="Variant.Outlined" />
+                </MudItem>
+                
+                <MudItem xs="12">
+                    <MudCheckBox T="bool" @bind-Checked="eventModel.IsOpenToRegister" Label="Открытый отдых" Color="Color.Primary" />
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Отмена</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit" Disabled="!isValid">Создать</MudButton>
+    </DialogActions>
+</MudDialog>

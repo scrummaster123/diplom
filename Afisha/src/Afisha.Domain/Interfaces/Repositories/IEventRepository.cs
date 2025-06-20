@@ -15,4 +15,20 @@ public interface IEventRepository
     /// <returns></returns>
     Task<List<Event>> GetEventsByFiltersAsync(DateOnly dateStart, DateOnly dateEnd, CancellationToken cancellationToken,
         long? locationId = null, long? sponsorId = null);
+    
+    /// <summary>
+    ///     Получение информации о событии по идентификатору
+    /// </summary>
+    Task<Event?> GetEventByIdAsync(long id, CancellationToken cancellationToken);
+    
+    /// <summary>
+    ///     Получение участников мероприятия по идентификатору мероприятия
+    /// </summary>
+    /// <returns>Массив пользователей, которые участвуют в мероприятии</returns>
+    Task<List<EventUser>> GetEventParticipantsAsync(long eventId, CancellationToken cancellationToken);
+
+    /// <summary>
+    ///     Получение организатора мероприятия по идентификатору мероприятия
+    /// </summary>
+    Task<User?> GetSponsorByEventIdAsync(long eventId, CancellationToken cancellationToken);
 }

@@ -1,0 +1,56 @@
+@page "/event/{EventId:int}"
+
+
+<MudContainer MaxWidth="MaxWidth.Medium" Class="py-4">
+    @if (isLoading)
+    {
+        <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+    }
+    else if (eventDetails != null)
+    {
+        <MudPaper Elevation="3" Class="pa-4">
+            <MudText Typo="Typo.h3" Class="mb-4">@eventDetails.Id</MudText>
+            
+            <MudGrid>
+                <MudItem xs="12" md="6">
+                    <MudText T="string" Typo="Typo.h6">Информация о мероприятии</MudText>
+                    <MudList T="string">
+                        <MudListItem T="string" Icon="@Icons.Material.Filled.CalendarToday">
+                            <MudText>Дата: @eventDetails.DateStart.ToString("dd.MM.yyyy HH:mm")</MudText>
+                        </MudListItem>
+                        <MudListItem T="string" Icon="@Icons.Material.Filled.LocationOn">
+                            <MudText>Место: @eventDetails.Location.Name</MudText>
+                        </MudListItem>
+                        <MudListItem T="string" Icon="@Icons.Material.Filled.Person">
+                            <MudText>Организатор: @eventDetails.Sponsor.FirstName @eventDetails.Sponsor.LastName</MudText>
+                        </MudListItem>
+                    </MudList>
+                </MudItem>
+                <MudItem xs="12" md="6">
+                    @if (eventDetails.IsOpenToRegister)
+                    {
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" 
+                                  Size="Size.Large" FullWidth="true"
+                                  OnClick="RegisterToEvent">
+                            Регистрация на мероприятие
+                        </MudButton>
+                    }
+                    else
+                    {
+                        <MudAlert Severity="Severity.Info">
+                            Регистрация на это мероприятие закрыта
+                        </MudAlert>
+                    }
+                </MudItem>
+            </MudGrid>
+            
+            <MudDivider Class="my-4" />
+            
+            <MudText Typo="Typo.body1">@eventDetails.Location.Name</MudText>
+        </MudPaper>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Error">Мероприятие не найдено</MudAlert>
+    }
+</MudContainer>

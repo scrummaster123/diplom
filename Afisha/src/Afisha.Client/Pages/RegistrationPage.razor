@@ -1,0 +1,150 @@
+@page "/registration"
+
+<MudContainer MaxWidth="MaxWidth.Small" Class="mt-8">
+    <MudPaper Elevation="3" Class="pa-6">
+        <MudText Typo="Typo.h4" Align="Align.Center" GutterBottom="true">
+            <MudIcon Icon="@Icons.Material.Filled.PersonAdd" Class="mr-2" />
+            Регистрация
+        </MudText>
+        
+        <MudForm @ref="form" Model="@registrationModel" @bind-IsValid="@isFormValid">
+            <MudGrid>
+                <!-- Имя -->
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="registrationModel.FirstName"
+                                  For="@(() => registrationModel.FirstName)"
+                                  Label="Имя*"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Counter="50"
+                                  MaxLength="50" />
+                </MudItem>
+                
+                <!-- Фамилия -->
+                <MudItem xs="12" md="6">
+                    <MudTextField @bind-Value="registrationModel.LastName"
+                                  For="@(() => registrationModel.LastName)"
+                                  Label="Фамилия*"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Counter="50"
+                                  MaxLength="50" />
+                </MudItem>
+                
+                <!-- Отчество -->
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="registrationModel.Patronymic"
+                                  For="@(() => registrationModel.Patronymic)"
+                                  Label="Отчество"
+                                  Variant="Variant.Outlined"
+                                  Counter="50"
+                                  MaxLength="50" />
+                </MudItem>
+                
+                <!-- Email -->
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="registrationModel.Email"
+                                  For="@(() => registrationModel.Email)"
+                                  Label="Email*"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  InputType="InputType.Email"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Email" />
+                </MudItem>
+                
+                <!-- Логин -->
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="registrationModel.Login"
+                                  For="@(() => registrationModel.Login)"
+                                  Label="Логин*"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  Counter="20"
+                                  MaxLength="20"
+                                  HelperText="От 6 до 20 символов"
+                                  Adornment="Adornment.Start"
+                                  AdornmentIcon="@Icons.Material.Filled.Person" />
+                </MudItem>
+                
+                <!-- Пароль -->
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="registrationModel.Password"
+                                  For="@(() => registrationModel.Password)"
+                                  Label="Пароль*"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  InputType="@passwordInput"
+                                  Counter="32"
+                                  MaxLength="32"
+                                  HelperText="Минимум 8 символов, должен содержать букву, цифру и спецсимвол"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@passwordInputIcon"
+                                  OnAdornmentClick="TogglePasswordVisibility" />
+                </MudItem>
+                
+                <!-- Подтверждение пароля -->
+                <MudItem xs="12">
+                    <MudTextField @bind-Value="registrationModel.ConfirmPassword"
+                                  For="@(() => registrationModel.ConfirmPassword)"
+                                  Label="Подтверждение пароля*"
+                                  Variant="Variant.Outlined"
+                                  Required="true"
+                                  InputType="@confirmPasswordInput"
+                                  Counter="32"
+                                  MaxLength="32"
+                                  Adornment="Adornment.End"
+                                  AdornmentIcon="@confirmPasswordInputIcon"
+                                  OnAdornmentClick="ToggleConfirmPasswordVisibility" />
+                </MudItem>
+                
+                <!-- Дата рождения -->
+                <MudItem xs="12" md="6">
+                    <MudDatePicker @bind-Date="registrationModel.Birthday"
+                                   For="@(() => registrationModel.Birthday)"
+                                   Label="Дата рождения"
+                                   Variant="Variant.Outlined"
+                                   MaxDate="DateTime.Now.Date"
+                                   MinDate="new DateTime(1925, 1, 1)"
+                                   Culture="@System.Globalization.CultureInfo.GetCultureInfo("ru-RU")" />
+                </MudItem>
+                
+                <!-- Пол -->
+                <MudItem xs="12" md="6" Class="d-flex align-center">
+                    <MudSelect T="bool?" @bind-Value="registrationModel.IsMale"
+                               Label="Пол"
+                               Variant="Variant.Outlined"
+                               Clearable="true">
+                        <MudSelectItem Value="@((bool?)true)">Мужской</MudSelectItem>
+                        <MudSelectItem Value="@((bool?)false)">Женский</MudSelectItem>
+                    </MudSelect>
+                </MudItem>
+                
+                <!-- Кнопки -->
+                <MudItem xs="12" Class="d-flex justify-space-between mt-4">
+                    <MudButton Variant="Variant.Text" 
+                               Color="Color.Primary"
+                               OnClick="@(() => Navigation.NavigateTo("/login"))">
+                        Уже есть аккаунт?
+                    </MudButton>
+                    
+                    <MudButton Variant="Variant.Filled"
+                               Color="Color.Primary"
+                               Size="Size.Large"
+                               OnClick="Submit"
+                               Disabled="@(!isFormValid || isSubmitting)">
+                        @if (isSubmitting)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                            <MudText Class="ms-2">Регистрация...</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Зарегистрироваться</MudText>
+                        }
+                    </MudButton>
+                </MudItem>
+            </MudGrid>
+        </MudForm>
+    </MudPaper>
+</MudContainer>

@@ -1,8 +1,6 @@
 ﻿using System.Reflection;
-using System.Text.Json.Serialization;
-using Afisha.Application;
 using Afisha.Application.Mappers;
-using Afisha.Application.Mappers.UserMappper;
+using Afisha.Application.Mappers.AfishaMappers;
 using Afisha.Application.Services;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Interfaces.Auth;
@@ -16,7 +14,6 @@ using Afisha.Infrastructure.Data.Repositories;
 using Asp.Versioning;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.OpenApi.Models;
 using Serilog.Sinks.Elasticsearch;
 using Serilog;
@@ -38,15 +35,13 @@ public static class ConfigureCoreServices
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
         services.AddScoped<IEventRepository, EventRepository>();
+        services.AddScoped<ILocationRepository, LocationRepository>();
 
         services.AddScoped<IEventRegistrationRule, EventRegistrationBaseRule>();
         
-        services.AddAutoMapper(typeof(UserMapper));
-
-        
         services.AddControllers().AddJsonOptions(options =>
         {
-            options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            options.JsonSerializerOptions.ReferenceHandler = null;
             options.JsonSerializerOptions.MaxDepth = 0;
         }); 
         
@@ -60,6 +55,7 @@ public static class ConfigureCoreServices
     public static IServiceCollection RegisterMapperProfiles(this IServiceCollection services)
     {
         services.AddAutoMapper(typeof(UserMapper));
+        services.AddAutoMapper(typeof(LocationMapper));
         return services;
     }
     public static WebApplicationBuilder AddPostgres(this WebApplicationBuilder builder)

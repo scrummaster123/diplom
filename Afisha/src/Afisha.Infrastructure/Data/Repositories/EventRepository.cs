@@ -27,4 +27,28 @@ public class EventRepository (AfishaDbContext context) : IEventRepository
         
         return events.ToListAsync(cancellationToken);
     }
+
+    public Task<Event?> GetEventByIdAsync(long id, CancellationToken cancellationToken)
+    {
+        return context.Events
+            .Include(x => x.Location)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+    }
+
+    public Task<List<EventUser>> GetEventParticipantsAsync(long eventId, CancellationToken cancellationToken)
+    {
+        return context.EventUsers
+            .Where(x => x.EventId == eventId)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+    
+    public Task<User?> GetSponsorByEventIdAsync(long eventId, CancellationToken cancellationToken)
+    {
+        return  context.EventUsers
+            .Where(x => x.EventId == eventId && (x.UserRole == EventRole.Organizer || x.UserRole == EventRole.Manager))
+            .Select(x => x.User)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(cancellationToken);
+    }
 }

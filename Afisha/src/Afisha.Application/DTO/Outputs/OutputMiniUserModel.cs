@@ -14,5 +14,10 @@
         ///     Логин пользователя 
         /// </summary>
         public string Login { get; set; }
+        
+        /// <summary>
+        ///     Идентификатор пользователя
+        /// </summary>
+        public long Id { get; set; }
     }
 }

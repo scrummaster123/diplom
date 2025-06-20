@@ -1,4 +1,4 @@
-﻿using Afisha.Application.Mappers.UserMappper;
+﻿using Afisha.Application.Mappers.AfishaMappers;
 using AutoMapper;
 
 namespace Afisha.Application.Mappers;
