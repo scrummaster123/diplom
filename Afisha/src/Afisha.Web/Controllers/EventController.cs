@@ -38,6 +38,8 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
     public async Task<IActionResult> GetEventsByFilter([FromQuery] DateOnly dateStart, [FromQuery] DateOnly dateEnd,
         [FromQuery] long? locationId, [FromQuery] long? sponsorId, [FromQuery] OrderByEnum orderBy = OrderByEnum.Default)
     {
+        eventService.IncrementViewCount();
+
         var events = await eventService.GetEventsByFilterAsync(dateStart, dateEnd, HttpContext.RequestAborted,
             locationId, sponsorId, orderBy);
 

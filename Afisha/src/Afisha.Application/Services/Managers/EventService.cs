@@ -18,6 +18,9 @@ public class EventService(
     IEventRepository eventsRepository,
     IMapper mapper) : IEventService
 {
+    private int _viewCount;
+    private readonly object _lock = new object();
+
     public async Task CreateEvent(CreateEvent createEvent, CancellationToken cancellationToken)
     {
         var config = autoMapperConfiguration.Configure();
@@ -68,6 +71,14 @@ public class EventService(
             Domain.Enums.TrackingType.NoTracking, cancellationToken);
         var outputEvent = iMapper.Map<Event, OutputEvent>(eventItem);
         return outputEvent;
+    }
+
+    public void IncrementViewCount()
+    {
+        lock (_lock)
+        {
+            _viewCount++;
+        }
     }
 
     private List<OutputEvent> OrderBy(List<OutputEvent> events, OrderByEnum orderByEnum)
