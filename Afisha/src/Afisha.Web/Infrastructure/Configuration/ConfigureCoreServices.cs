@@ -38,7 +38,8 @@ public static class ConfigureCoreServices
         services.AddScoped<IRatingService, RatingService>();
         services.AddScoped<IUserSomeActionService, UserSomeActionService>();
         services.AddScoped<IEventRepository, EventRepository>();
-        
+        services.AddSingleton<HackService, HackService>();
+
         services.AddAutoMapper(typeof(UserMapper));
 
         

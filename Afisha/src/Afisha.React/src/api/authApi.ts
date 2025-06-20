@@ -34,9 +34,9 @@ export const authApi = {
   },
 
   getCurrentUser: async (): Promise<{ userId: number }> => {
-    //const response = await api.get<{ userId: number }>('/Auth/me');
-    //return response.data;
-    const id = 3;
-    return { userId: id };
+    const response = await api.get<{ userId: number }>('/Auth/me');
+    return response.data;
+    //const id = 3;
+    //return { userId: id };
   },
 };

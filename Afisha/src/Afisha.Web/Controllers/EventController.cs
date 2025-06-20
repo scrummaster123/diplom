@@ -3,14 +3,15 @@ using Afisha.Application.Enum;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Services.Managers;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQModels;
+using System.Security.Claims;
 
 namespace Afisha.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
 public class EventController(IEventService eventService, IPublishEndpoint pub) : ControllerBase
 {
     [HttpGet]
@@ -66,6 +67,39 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
             totalCount,
             totalPages = (int)Math.Ceiling((double)totalCount / pageSize)
         });
+    }
+
+    [HttpPost]
+    [Route("join")]
+    public async Task<IActionResult> JoinEvent([FromBody] JoinEventRequest request)
+    {
+        /*
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userId))
+        {
+            return Unauthorized("User ID not found in token");
+        }
+        */
+        if (request.UserId <= 0)
+        {
+            return BadRequest("Invalid User ID");
+        }
+
+        try
+        {
+            await eventService.JoinEventAsync(request.EventId, request.UserId, HttpContext.RequestAborted);
+            return Ok("Successfully joined the event");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    public class JoinEventRequest
+    {
+        public long EventId { get; set; }
+        public long UserId { get; set; }
     }
 }
 

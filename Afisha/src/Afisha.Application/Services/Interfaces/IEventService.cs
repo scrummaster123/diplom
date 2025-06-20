@@ -26,4 +26,6 @@ public interface IEventService
     Task<IEnumerable<OutputEventBase>> GetEventsPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
 
     Task<int> GetTotalEventsCountAsync(CancellationToken cancellationToken);
+
+    Task JoinEventAsync(long eventId, long userId, CancellationToken cancellationToken);
 }

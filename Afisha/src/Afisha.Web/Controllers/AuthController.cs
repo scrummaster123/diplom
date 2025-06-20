@@ -1,5 +1,7 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.Services.Interfaces.Auth;
+using Afisha.Application.Services.Managers;
+using Afisha.Domain.Entities;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -9,7 +11,7 @@ namespace Afisha.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class AuthController(IAuthService authService) : Controller
+    public class AuthController(IAuthService authService, HackService hackService) : Controller
     {
         [HttpPost]
         [Route("user-registration")]
@@ -34,12 +36,15 @@ namespace Afisha.Web.Controllers
         [HttpGet("me")]
         public IActionResult GetCurrentUser()
         {
+            /*
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized();
             }
             return Ok(new { userId = long.Parse(userId) });
+            */
+            return Ok(new { userId = hackService.UserId });
         }
     }
 }

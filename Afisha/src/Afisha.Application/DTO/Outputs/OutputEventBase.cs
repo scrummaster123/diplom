@@ -21,4 +21,6 @@ public class OutputEventBase // ----------- (?) Название ивента --
     /// Дата начала мероприятия
     /// </summary>
     public DateOnly Date { get; set; }
+
+    public long[] Participants { get; set; }
 }

@@ -9,7 +9,7 @@ using AutoMapper;
 
 namespace Afisha.Application.Services.Managers
 {
-    public class AuthService(IUserService userService, IUserRepository userRepository, IJwtProvider jwtProvider, IPasswordHasher passwordHasher, IMapper mapper, IUnitOfWork unitOfWork) : IAuthService
+    public class AuthService(IUserService userService, IUserRepository userRepository, IJwtProvider jwtProvider, IPasswordHasher passwordHasher, IMapper mapper, IUnitOfWork unitOfWork, HackService hackService) : IAuthService
     {
         public async Task<bool> UserRegistrationAsync(RegistrationUserModel userModel, CancellationToken cancellationToken)
         {
@@ -37,8 +37,10 @@ namespace Afisha.Application.Services.Managers
 
             var result = await userRepository.AddRegisterUserAsync(userMap, cancellationToken);
 
-            if (result)
+            if (result) 
+            { 
                 await unitOfWork.CommitAsync(cancellationToken);
+            }
 
             return result;
         }
@@ -60,7 +62,7 @@ namespace Afisha.Application.Services.Managers
             }
 
             var token = jwtProvider.GenerateToken(user);
-
+            hackService.UserId = user.Id;
             return token;
         }
     }

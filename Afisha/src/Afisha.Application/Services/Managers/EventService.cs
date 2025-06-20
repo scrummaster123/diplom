@@ -9,11 +9,13 @@ using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
 using Afisha.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Afisha.Application.Services.Managers;
 
 public class EventService(
     IRepository<Event, long> eventRepository,
+    IRepository<EventUser, long> eventUsertRepository,
     IUnitOfWork unitOfWork,
     AutoMapperConfiguration autoMapperConfiguration,
     IEventRepository eventsRepository,
@@ -95,12 +97,25 @@ public class EventService(
             Name = "<Без названия>",
             Date = e.DateStart,
             Location = e.Location.Name,
-            Organizer = e.EventParticipants.Where(x=>x.UserRole.Equals(EventRole.Organizer)).Select(u => $"{u.User.FirstName} {u.User.LastName}").FirstOrDefault()
+            Organizer = e.EventParticipants.Where(x=>x.UserRole.Equals(EventRole.Organizer)).Select(u => $"{u.User.FirstName} {u.User.LastName}").FirstOrDefault(),
+            Participants = e.EventParticipants.Select(x => x.UserId).ToArray()
         }) ?? new List<OutputEventBase>();
     }
 
     public async Task<int> GetTotalEventsCountAsync(CancellationToken cancellationToken)
     {
         return await eventRepository.GetTotalCountAsync(cancellationToken);
+    }
+
+    public async Task JoinEventAsync(long eventId, long userId, CancellationToken cancellationToken)
+    {
+        //TODO: Добавить проверки
+        var eventUser = new EventUser{
+            EventId = eventId,
+            UserId = userId,
+            UserRole = EventRole.Guest
+        };
+        eventUsertRepository.Add(eventUser);
+        await unitOfWork.CommitAsync(cancellationToken);
     }
 }

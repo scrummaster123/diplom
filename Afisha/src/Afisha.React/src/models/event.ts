@@ -4,6 +4,7 @@
   organizer: string;
   location: string;
   date: string; // DateOnly преобразуется в string в JSON
+  participants: number[]; // Массив Id участников
 }
 
 export interface OutputEvent extends OutputEventBase {

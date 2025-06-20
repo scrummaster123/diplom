@@ -1,15 +1,16 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Afisha.Domain.Entities.Abstractions;
 using Afisha.Domain.Enums;
 
 namespace Afisha.Domain.Entities;
 
-public class EventUser
+public class EventUser : EntityBase<long>
 {
     
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; init; }
+    public new long Id { get; init; }
     
     public long EventId { get; set; }
     [Required]

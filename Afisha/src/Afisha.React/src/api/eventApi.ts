@@ -35,4 +35,8 @@ export const eventApi = {
       totalPages: response.data.totalPages || 1,
     };
   },
+
+  joinEvent: async (eventId: number, userId: number): Promise<void> => {
+    await api.post('/Event/join', { eventId, userId });
+  },
 };
