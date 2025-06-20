@@ -6,12 +6,7 @@ using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 using System.Security.Claims;
 
-public class AuthorizedUserModel
-{
-    public string Login { get; set; }
-    public long UserId { get; set; }
-    public string Email { get; set; }
-}
+
 public class CustomAuthenticationStateProvider : AuthenticationStateProvider
 {
     private readonly ILocalStorageService _localStorage;

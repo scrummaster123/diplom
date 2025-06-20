@@ -1,0 +1,17 @@
+@inject NavigationManager Navigation
+
+@code {
+    protected override void OnInitialized()
+    {
+        var currentUrl = Navigation.Uri;
+        var baseUri = Navigation.BaseUri;
+        var relativePath = currentUrl.Substring(baseUri.Length - 1);
+        
+        // Не перенаправляем, если уже на странице логина
+        if (!relativePath.StartsWith("/login"))
+        {
+            var loginUrl = $"/login?returnUrl={Uri.EscapeDataString(relativePath)}";
+            Navigation.NavigateTo(loginUrl);
+        }
+    }
+}
