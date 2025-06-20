@@ -21,4 +21,9 @@ public interface IEventService
     /// </summary>
     Task<List<OutputEvent>> GetEventsByFilterAsync(DateOnly? dateStart, DateOnly? dateEnd,
         CancellationToken cancellationToken, long? locationId = null, long? sponsorId = null, OrderByEnum orderByEnum = OrderByEnum.Default);
+
+
+    Task<IEnumerable<OutputEventBase>> GetEventsPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
+
+    Task<int> GetTotalEventsCountAsync(CancellationToken cancellationToken);
 }

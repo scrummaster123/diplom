@@ -14,7 +14,7 @@ namespace Afisha.Application.Services.Interfaces.Auth
 
         public string GenerateToken(User user)
         {
-            Claim[] claims = [new("userId", user.Id.ToString()), new("email", user.Email), new("login", user.Login)];
+            Claim[] claims = [new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()), new Claim(ClaimTypes.Email, user.Email), new Claim(ClaimTypes.Name, user.Login)];
 
             var signingCredentials = new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)), SecurityAlgorithms.HmacSha256);
 

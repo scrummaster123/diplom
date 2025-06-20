@@ -42,13 +42,13 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns><see cref="{T}[]"/>, который содержит элементы, соответствующие условию, переданному в <paramref name="specification"/></returns>
     /// <exception cref="ArgumentException">Ошибка указания параметров пагинации запроса</exception>
-    public async Task<T[]> GetPagedAsync(ISpecification<T> specification, TrackingType trackingType = TrackingType.Tracking, int pageIndex = 0, int pageSize = 20, CancellationToken cancellationToken = default)
+    public async Task<T[]> GetPagedAsync(ISpecification<T> specification, TrackingType trackingType = TrackingType.Tracking, int pageIndex = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
-        if (pageIndex < 0)
-            throw new ArgumentException("Индекс страницы должен быть больше, либо равен 0");
+        if (pageIndex < 1)
+            throw new ArgumentException("Индекс страницы должен быть больше, либо равен 1");
         if (pageSize < 1)
             throw new ArgumentException("Размер страницы должен быть больше, либо равен 1");
-        int skip = pageIndex * pageSize;
+        int skip = (pageIndex - 1) * pageSize;
 
         var query = specification.BuildQueryable(GetTrackingConfiguredQuery(trackingType));
 
@@ -99,4 +99,9 @@ public class ReadRepository<T, TKey> : IReadRepository<T, TKey>
         TrackingType.Tracking => _dbSet,
         _ => throw new ArgumentOutOfRangeException(nameof(trackingType), trackingType, null)
     };
+
+    public Task<int> GetTotalCountAsync(CancellationToken cancellationToken = default)
+    {
+        return _dbSet.CountAsync(cancellationToken);
+    }
 }

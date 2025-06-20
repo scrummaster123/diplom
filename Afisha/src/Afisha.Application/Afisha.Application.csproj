@@ -7,6 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <None Include="DTO\Outputs\OutputEventBase.cs" />
+      <None Include="Specifications\Event\EventWithUserAndLocation.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="AutoMapper" Version="13.0.1" />
       <PackageReference Include="NEST" Version="7.17.5" />
     </ItemGroup>

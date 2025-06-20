@@ -1,6 +1,5 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
-using Afisha.Domain.Entities;
 
 namespace Afisha.Application.Services.Interfaces;
 public interface ILocationService
@@ -21,4 +20,8 @@ public interface ILocationService
     /// <param name="search"></param>
     /// <returns></returns>
     Task<IEnumerable<OutputLocationBase>> GetBySearchString(string search);
+
+    Task<IEnumerable<OutputLocationBase>> GetLocationsPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
+
+    Task<int> GetTotalLocationsCountAsync(CancellationToken cancellationToken);
 }

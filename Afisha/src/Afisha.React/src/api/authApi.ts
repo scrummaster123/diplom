@@ -20,7 +20,10 @@ export const authApi = {
   login: async (data: LoginUserModel) => {
     console.log('Login request:', data);
     const response = await api.post<string>('/Auth/login', data);
-    return response.data;
+    const token = response.data;
+    localStorage.setItem('token', token); // Убедитесь, что токен сохраняется
+    console.log('Saved token:', token); // Для отладки
+    return token;
   },
 
   register: async (data: RegistrationUserModel) => {
@@ -28,5 +31,12 @@ export const authApi = {
     const response = await api.post('/Auth/user-registration', data);
     console.log('Registration response:', response);
     return response;
+  },
+
+  getCurrentUser: async (): Promise<{ userId: number }> => {
+    //const response = await api.get<{ userId: number }>('/Auth/me');
+    //return response.data;
+    const id = 3;
+    return { userId: id };
   },
 };

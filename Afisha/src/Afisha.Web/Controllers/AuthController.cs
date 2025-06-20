@@ -3,12 +3,12 @@ using Afisha.Application.Services.Interfaces.Auth;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Afisha.Web.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    [AllowAnonymous]
     public class AuthController(IAuthService authService) : Controller
     {
         [HttpPost]
@@ -29,6 +29,17 @@ namespace Afisha.Web.Controllers
             var token = await authService.LoginAsync(loginUserModel.Email, loginUserModel.Password, cancellationToken);
 
             return token;
+        }
+
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null)
+            {
+                return Unauthorized();
+            }
+            return Ok(new { userId = long.Parse(userId) });
         }
     }
 }

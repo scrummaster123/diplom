@@ -8,6 +8,7 @@ using Afisha.Application.Mappers;
 using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
+using Afisha.Domain.Enums;
 
 namespace Afisha.Application.Services.Managers;
 
@@ -80,5 +81,26 @@ public class EventService(
             OrderByEnum.Sponsor => events.OrderBy(x => x.Sponsor.Email).ToList(),
             _ => events
         };
+    }
+
+    public async Task<IEnumerable<OutputEventBase>> GetEventsPagedAsync(int page, int pageSize, CancellationToken cancellationToken)
+    {
+        int skip = (page - 1) * pageSize;
+        var events = await eventRepository.GetPagedAsync(new EventWithUserAndLocationList(), TrackingType.Tracking, page, pageSize, cancellationToken);
+
+
+        return events?.Select(e => new OutputEventBase
+        {
+            Id = e.Id,
+            Name = "<Без названия>",
+            Date = e.DateStart,
+            Location = e.Location.Name,
+            Organizer = e.EventParticipants.Where(x=>x.UserRole.Equals(EventRole.Organizer)).Select(u => $"{u.User.FirstName} {u.User.LastName}").FirstOrDefault()
+        }) ?? new List<OutputEventBase>();
+    }
+
+    public async Task<int> GetTotalEventsCountAsync(CancellationToken cancellationToken)
+    {
+        return await eventRepository.GetTotalCountAsync(cancellationToken);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.Enum;
 using Afisha.Application.Services.Interfaces;
+using Afisha.Application.Services.Managers;
 using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQModels;
@@ -45,6 +46,26 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
             return NotFound("События не найдены");
 
         return Ok(events);
+    }
+
+    [HttpGet]
+    [Route("list")]
+    public async Task<IActionResult> GetEvents([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    {
+        if (page < 1 || pageSize < 1 || pageSize > 20)
+        {
+            return BadRequest("Invalid page or pageSize. Page must be >= 1, pageSize must be between 1 and 20.");
+        }
+
+        var events = await eventService.GetEventsPagedAsync(page, pageSize, HttpContext.RequestAborted);
+        var totalCount = await eventService.GetTotalEventsCountAsync(HttpContext.RequestAborted);
+
+        return Ok(new
+        {
+            events = events.ToArray(),
+            totalCount,
+            totalPages = (int)Math.Ceiling((double)totalCount / pageSize)
+        });
     }
 }
 

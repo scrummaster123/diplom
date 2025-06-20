@@ -4,6 +4,7 @@ using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Specifications.Location;
 using Afisha.Domain.Entities;
+using Afisha.Domain.Enums;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
 
@@ -97,5 +98,23 @@ public class LocationService(
         }
 
         return locations;
+    }
+
+    public async Task<IEnumerable<OutputLocationBase>> GetLocationsPagedAsync(int page, int pageSize, CancellationToken cancellationToken)
+    {
+        // Пример: получение данных из базы
+        var locations = await locationRepository.GetPagedAsync(new LocationSpecification(),TrackingType.Tracking, page, pageSize,  cancellationToken);
+        return locations.Select(l => new OutputLocationBase
+        {
+            OwnerId = l.OwnerId,
+            Name = l.Name,
+            Pricing = l.Pricing,
+            IsWarmPlace = l.IsWarmPlace
+        });
+    }
+
+    public async Task<int> GetTotalLocationsCountAsync(CancellationToken cancellationToken)
+    {
+        return await locationRepository.GetTotalCountAsync(cancellationToken);
     }
 }
