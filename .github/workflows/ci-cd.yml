@@ -19,10 +19,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore diplom/Afisha/Afisha.Tests/Afisha.Tests.csproj
+      run: dotnet restore Afisha/Afisha.Tests/Afisha.Tests.csproj
 
     - name: Build solution
-      run: dotnet build diplom/Afisha/Afisha.Tests/Afisha.Tests.csproj --no-restore
+      run: dotnet build Afisha/Afisha.Tests/Afisha.Tests.csproj --no-restore
 
     - name: Run Afisha.Tests tests
-      run: dotnet test diplom/Afisha/Afisha.Tests/Afisha.Tests.csproj --no-build --verbosity normal
+      run: dotnet test Afisha/Afisha.Tests/Afisha.Tests.csproj --no-build --verbosity normal
