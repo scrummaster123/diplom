@@ -71,23 +71,19 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
 
     [HttpPost]
     [Route("join")]
-    public async Task<IActionResult> JoinEvent([FromBody] JoinEventRequest request)
+    [Authorize]
+    public async Task<IActionResult> JoinEvent([FromQuery] long eventId)
     {
-        /*
+        
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
         if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userId))
         {
             return Unauthorized("User ID not found in token");
         }
-        */
-        if (request.UserId <= 0)
-        {
-            return BadRequest("Invalid User ID");
-        }
 
         try
         {
-            await eventService.JoinEventAsync(request.EventId, request.UserId, HttpContext.RequestAborted);
+            await eventService.JoinEventAsync(eventId, userId, HttpContext.RequestAborted);
             return Ok("Successfully joined the event");
         }
         catch (Exception ex)

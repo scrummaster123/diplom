@@ -1,8 +1,6 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.Services.Interfaces.Auth;
 using Afisha.Application.Services.Managers;
-using Afisha.Domain.Entities;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -34,17 +32,15 @@ namespace Afisha.Web.Controllers
         }
 
         [HttpGet("me")]
+        [Authorize]
         public IActionResult GetCurrentUser()
         {
-            /*
             var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized();
             }
             return Ok(new { userId = long.Parse(userId) });
-            */
-            return Ok(new { userId = hackService.UserId });
         }
     }
 }

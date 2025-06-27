@@ -2,9 +2,11 @@
 
 namespace Afisha.Infrastructure
 {
-    public class JwtOptions : IJwtOptions
+    public class JwtOptions
     {
-        public string SecretKey { get; set; } = "Xj9sT7uYzZ8tFq3kKfGnLpV2QaRwE7x/oBmP0ZvJcNqH2MA=";
-        public int ExpitesHours { get; set; } = 80;
+        public string SecretKey { get; set; } 
+        public int ExpiresHours { get; set; }
+        public string Issuer { get; set; }
+        public string Audience { get; set; }
     }
 }

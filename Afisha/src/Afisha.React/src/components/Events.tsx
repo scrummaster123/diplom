@@ -69,8 +69,7 @@ const Events: React.FC = () => {
       return;
     }
     try {
-      await eventApi.joinEvent(eventId, userId);
-      console.log(`Joined event ${eventId} with userId ${userId}`);
+      await eventApi.joinEvent(eventId);
       setError(null);
       await fetchEvents(); // Обновляем список событий
     } catch (err: any) {

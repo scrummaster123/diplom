@@ -50,7 +50,6 @@ public static class ConfigureCoreServices
         }); 
         
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IJwtOptions, JwtOptions>();
         services.AddScoped<IJwtProvider, JwtProvider>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         return services;

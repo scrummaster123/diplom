@@ -36,7 +36,7 @@ export const eventApi = {
     };
   },
 
-  joinEvent: async (eventId: number, userId: number): Promise<void> => {
-    await api.post('/Event/join', { eventId, userId });
+  joinEvent: async (eventId: number): Promise<void> => {
+    await api.post('/Event/join', null, { params: { eventId } });
   },
 };
