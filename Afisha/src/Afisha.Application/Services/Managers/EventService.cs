@@ -10,6 +10,7 @@ using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
 using Afisha.Domain.Enums;
 using System.ComponentModel.DataAnnotations;
+using Afisha.Application.Specifications.EventUser;
 
 namespace Afisha.Application.Services.Managers;
 
@@ -117,5 +118,18 @@ public class EventService(
         };
         eventUsertRepository.Add(eventUser);
         await unitOfWork.CommitAsync(cancellationToken);
+    }
+
+    public async Task LeaveEventAsync(long eventId, long userId, CancellationToken cancellationToken)
+    {
+        var eventUsers = await eventUsertRepository.GetAsync(new EventUserSpecification(eventId, userId));
+        var eventUser = eventUsers.FirstOrDefault();
+        if (eventUser != null) {
+            if (eventUser.UserRole != EventRole.Organizer)
+            {
+                await eventUsertRepository.DeleteAsync(eventUser.Id, cancellationToken);
+                await unitOfWork.CommitAsync(cancellationToken);
+            }
+        }
     }
 }

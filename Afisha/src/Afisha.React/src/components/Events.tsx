@@ -84,6 +84,29 @@ const Events: React.FC = () => {
     }
   };
 
+  // Покинуть к событию
+  const handleLeaveEvent = async (eventId: number) => {
+    if (userId === null) {
+      setError('User ID is not available');
+      navigate('/login');
+      return;
+    }
+    try {
+      await eventApi.leaveEvent(eventId);
+      setError(null);
+      await fetchEvents(); // Обновляем список событий
+    } catch (err: any) {
+      console.error('Error joining event:', err);
+      const errorMessage =
+        err.response?.data?.details ||
+        err.response?.data?.error ||
+        err.response?.data?.title ||
+        'Failed to join event';
+      console.log('Error response data:', err.response?.data); // Debug log
+      setError(errorMessage);
+    }
+  };
+
   // Переключение страниц
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -116,7 +139,9 @@ const Events: React.FC = () => {
                     Присоединиться
                   </button>
                 ) : (
-                  <span style={{ marginLeft: '10px' }}>(Вы участвуете)</span>
+                  <span style={{ marginLeft: '10px' }}>(Вы участвуете)<button onClick={() => handleLeaveEvent(event.id)} style={{ marginLeft: '10px' }}>
+                    Покинуть
+                  </button></span>
                 )}
               </li>
             ))}

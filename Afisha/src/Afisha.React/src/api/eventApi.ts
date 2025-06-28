@@ -39,4 +39,8 @@ export const eventApi = {
   joinEvent: async (eventId: number): Promise<void> => {
     await api.post('/Event/join', null, { params: { eventId } });
   },
+
+  leaveEvent: async (eventId: number): Promise<void> => {
+    await api.post('/Event/leave', null, { params: { eventId } });
+  },
 };

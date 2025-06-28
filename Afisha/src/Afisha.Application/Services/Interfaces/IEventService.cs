@@ -28,4 +28,6 @@ public interface IEventService
     Task<int> GetTotalEventsCountAsync(CancellationToken cancellationToken);
 
     Task JoinEventAsync(long eventId, long userId, CancellationToken cancellationToken);
+
+    Task LeaveEventAsync(long eventId, long userId, CancellationToken cancellationToken);
 }

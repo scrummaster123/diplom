@@ -92,11 +92,29 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
         }
     }
 
-    public class JoinEventRequest
+    [HttpPost]
+    [Route("leave")]
+    [Authorize]
+    public async Task<IActionResult> LeaveEvent([FromQuery] long eventId)
     {
-        public long EventId { get; set; }
-        public long UserId { get; set; }
+
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userId))
+        {
+            return Unauthorized("User ID not found in token");
+        }
+
+        try
+        {
+            await eventService.LeaveEventAsync(eventId, userId, HttpContext.RequestAborted);
+            return Ok("Successfully leave the event");
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
+
 }
 
 
