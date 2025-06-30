@@ -1,25 +1,36 @@
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
+using Microsoft.AspNetCore.Components.Authorization;
 using Afisha.Client;
 using Afisha.Client.Services;
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.Authorization;
 using MudBlazor.Services;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
+
+// LocalStorage
 builder.Services.AddBlazoredLocalStorage();
 
-builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+// HttpClient
+// builder.Services.AddScoped(sp => new HttpClient());
+
+// MudBlazor
 builder.Services.AddMudServices();
 
-// Authentication & Authorization
-builder.Services.AddScoped<CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<AuthenticationStateProvider>(provider => 
-    provider.GetRequiredService<CustomAuthenticationStateProvider>());
-builder.Services.AddAuthorizationCore();
 
-builder.Services.AddScoped<IAuthService, AuthService>();
+// HTTP Client с AuthHandler
+builder.Services.AddScoped<AuthHttpHandler>();
+builder.Services.AddScoped(sp =>
+{
+    var handler = sp.GetRequiredService<AuthHttpHandler>();
+    handler.InnerHandler = new HttpClientHandler();
+    
+    return new HttpClient(handler)
+    {
+        BaseAddress = new Uri("http://localhost:5182") // Ваш API URL
+    };
+});
+
 await builder.Build().RunAsync();
-

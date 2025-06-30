@@ -3,6 +3,7 @@ using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
 using Afisha.Application.Services.Interfaces;
 using MassTransit;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQModels;
 
@@ -10,7 +11,7 @@ namespace Afisha.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-
+[Authorize]
 public class EventController(IEventService eventService) : ControllerBase
 {
     [HttpGet("{id}")]

@@ -43,10 +43,15 @@ builder.AddApiVersioning();
 // Добавление сваггера
 builder.AddSwagger();
 
+builder.Services.AddAuthentication();
+builder.Services.AddAuthorization();
+
 
 var app = builder.Build();
 
 app.UseExceptionHandler();
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();

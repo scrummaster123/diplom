@@ -1,6 +1,6 @@
+using System.Net;
 using System.Net.Http.Json;
 using System.Text;
-using System.Text.Json;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Client.Events;
 using Blazored.LocalStorage;
@@ -35,8 +35,6 @@ public partial class EventMainPage : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
-        // Получение данных
-        var token = await LocalStorage.GetItemAsync<string>("authToken");
         await GetEvents();
     }
 

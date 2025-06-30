@@ -28,7 +28,7 @@ public partial class LoginPage : ComponentBase
     [Inject] private HttpClient HttpClient { get; set; }
     [Inject] private NavigationManager Navigation { get; set; }
     [Inject] private ISnackbar Snackbar { get; set; }
-    [Inject] private ILocalStorageService LocalStorage { get; set; }
+    [Inject] private ILocalStorageService LocalStorageService { get; set; }
 
 
     protected override async Task OnInitializedAsync()
@@ -61,9 +61,9 @@ public partial class LoginPage : ComponentBase
             {
                 // Успешная авторизация
                 var result = await response.Content.ReadAsStringAsync();
-                
+
                 // Здесь можно сохранить токен в localStorage или cookies
-                await LocalStorage.SetItemAsync("authToken", result);
+                await LocalStorageService.SetItemAsync("authToken", result);
                 
                 Snackbar.Add("Вход выполнен успешно!", Severity.Success);
                 
