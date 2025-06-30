@@ -6,6 +6,7 @@ import Login from './components/Login';
 import Locations from './components/Locations';
 import Events from './components/Events';
 import Rating from './components/Rating';
+import MapPage from './components/MapPage';
 import './App.css';
 
 const AppContent: React.FC = () => {
@@ -21,6 +22,7 @@ const AppContent: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/locations" element={<Locations />} />
+          <Route path="/map" element={<MapPage />} />
           <Route path="/events" element={<Events />} />
           <Route path="/rating" element={<Rating />} />
           <Route path="/" element={<Login />} />

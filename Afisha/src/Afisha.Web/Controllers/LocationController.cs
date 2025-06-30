@@ -51,4 +51,25 @@ public class LocationController(ILocationService locationService, IServiceProvid
             TotalPages = (int)Math.Ceiling((double)totalCount / pageSize)
         });
     }
+
+    [HttpGet]
+    [Route("map")]
+    public IActionResult GetMap()
+    {
+        return Ok(new
+        {
+            MapUrl = "images/map.jpg",
+            MapWidth = 1024, // Pixel width of map.png
+            MapHeight = 800 // Pixel height of map.png
+        });
+    }
+
+    [HttpGet]
+    [Route("map-locations")]
+    public async Task<IActionResult> GetLocations()
+    {
+        var locations = await locationService.GetAllAsync(HttpContext.RequestAborted);
+        return Ok(locations);
+    }
+
 }

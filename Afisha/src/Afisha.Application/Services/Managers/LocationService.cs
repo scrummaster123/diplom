@@ -117,4 +117,17 @@ public class LocationService(
     {
         return await locationRepository.GetTotalCountAsync(cancellationToken);
     }
+
+    public async Task<IReadOnlyCollection<OutputLocationBase>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var locations = await locationRepository.GetAsync(new LocationSpecification(), TrackingType.Tracking, cancellationToken);
+        Random rnd = new Random();
+        return locations.Select(l => new OutputLocationBase
+        {
+            Id = l.Id,
+            Name = l.Name,
+            XCoordinate = 512 + rnd.Next(-500,500),
+            YCoordinate = 400 + rnd.Next(-380, 380),
+        }).ToList();
+    }
 }

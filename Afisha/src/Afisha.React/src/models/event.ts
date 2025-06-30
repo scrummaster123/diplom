@@ -16,3 +16,10 @@ export interface PagedEventsResponse {
   totalCount: number;
   totalPages: number;
 }
+
+export interface OutputLocation {
+  id: number;
+  name: string;
+  xCoordinate: number;
+  yCoordinate: number;
+}

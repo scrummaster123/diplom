@@ -43,4 +43,13 @@ export const eventApi = {
   leaveEvent: async (eventId: number): Promise<void> => {
     await api.post('/Event/leave', null, { params: { eventId } });
   },
+
+  createEvent: async (event: {
+    name: string;
+    organizer: string;
+    locationId: number;
+    date: string;
+  }): Promise<void> => {
+    await api.post('/Event/create', event);
+  },
 };

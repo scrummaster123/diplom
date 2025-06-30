@@ -68,7 +68,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseSerilogRequestLogging();
-
+app.UseStaticFiles(); // Serve static files (e.g., map.png)
 // Add authentication middleware before authorization
 app.UseAuthentication(); 
 app.UseAuthorization();

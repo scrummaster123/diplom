@@ -24,4 +24,6 @@ public interface ILocationService
     Task<IEnumerable<OutputLocationBase>> GetLocationsPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
 
     Task<int> GetTotalLocationsCountAsync(CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<OutputLocationBase>> GetAllAsync(CancellationToken cancellationToken);
 }

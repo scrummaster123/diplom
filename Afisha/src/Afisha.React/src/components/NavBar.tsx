@@ -19,6 +19,11 @@ const NavBar: React.FC = () => {
           </NavLink>
         </li>
         <li>
+          <NavLink to="/map" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
+            Локации на карте
+          </NavLink>
+        </li>
+        <li>
           <NavLink to="/events" className={({ isActive }) => (isActive ? 'nav-link active' : 'nav-link')}>
             События
           </NavLink>

@@ -2,6 +2,8 @@ namespace Afisha.Application.DTO.Outputs;
 
 public class OutputLocationBase // -------- (?) Почти аналогичные модели с OutputEventLocation -----
 {
+    public long Id { get; set; }
+
     /// <summary>
     ///     Id владелца площадки
     /// </summary>
@@ -22,4 +24,7 @@ public class OutputLocationBase // -------- (?) Почти аналогичны�
     ///     зона)
     /// </summary>
     public bool IsWarmPlace { get; set; }
+
+    public int XCoordinate { get; set; }
+    public int YCoordinate { get; set; }
 }
