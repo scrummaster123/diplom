@@ -1,4 +1,5 @@
-﻿using Afisha.Application.DTO;
+﻿using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
 using Afisha.Domain.Entities;
 using AutoMapper;
 

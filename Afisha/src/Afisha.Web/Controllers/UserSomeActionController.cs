@@ -1,6 +1,7 @@
 ﻿using Afisha.Application.Services.Interfaces;
 using Afisha.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace Afisha.Web.Controllers
 {
@@ -18,6 +19,14 @@ namespace Afisha.Web.Controllers
         public async Task<User> Get()
         {
             return await _userSomeAction.SomeActionAsync();
+        }
+
+        [HttpGet]
+        [Route("log-test")]
+        public async Task LoggerTest()
+        {
+            Log.Fatal("test fatal error");
+            throw new NotImplementedException();
         }
     }
 }

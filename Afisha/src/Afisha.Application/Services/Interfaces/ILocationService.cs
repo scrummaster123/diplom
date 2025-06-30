@@ -1,4 +1,5 @@
-﻿using Afisha.Domain.Entities;
+﻿using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
 
 namespace Afisha.Application.Services.Interfaces;
 public interface ILocationService
@@ -12,4 +13,17 @@ public interface ILocationService
     ///     Создание новой локации
     /// </summary>
     Task<OutputLocationBase> CreateLocation(CreateLocationModel location, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Поиск локаций в Elastic по примерному описанию
+    /// </summary>
+    /// <param name="search"></param>
+    /// <returns></returns>
+    Task<IEnumerable<OutputLocationBase>> GetBySearchString(string search);
+
+    Task<IEnumerable<OutputLocationBase>> GetLocationsPagedAsync(int page, int pageSize, CancellationToken cancellationToken);
+
+    Task<int> GetTotalLocationsCountAsync(CancellationToken cancellationToken);
+
+    Task<IReadOnlyCollection<OutputLocationBase>> GetAllAsync(CancellationToken cancellationToken);
 }

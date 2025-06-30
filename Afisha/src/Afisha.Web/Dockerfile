@@ -16,6 +16,7 @@ COPY ["src/Afisha.Web/Afisha.Web.csproj", "src/Afisha.Web/"]
 COPY ["src/Afisha.Application/Afisha.Application.csproj", "src/Afisha.Application/"]
 COPY ["src/Afisha.Domain/Afisha.Domain.csproj", "src/Afisha.Domain/"]
 COPY ["src/Afisha.Infrastructure/Afisha.Infrastructure.csproj", "src/Afisha.Infrastructure/"]
+COPY ["src/RabbitMQModels/RabbitMQModels.csproj", "src/RabbitMQModels/"]
 RUN dotnet restore "./src/Afisha.Web/Afisha.Web.csproj"
 COPY . .
 WORKDIR "/src/src/Afisha.Web"

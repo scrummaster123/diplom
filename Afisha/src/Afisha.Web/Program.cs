@@ -1,42 +1,59 @@
-using System.Reflection;
-using System.Text.Json.Serialization;
+using Afisha.Infrastructure.Data;
+using Afisha.Infrastructure;
 using Afisha.Web.Infrastructure.Configuration;
 using Afisha.Web.Middleware;
-using Asp.Versioning;
-using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens; 
+using Serilog;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails(); // Можно для соответствия RFC 7807
+builder.Services.AddProblemDetails();
 
+// Добавление основных сервисов
 builder.Services.AddCoreServices();
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
-    options.JsonSerializerOptions.MaxDepth = 0;
-}); 
+builder.Services.RegisterMapperProfiles();
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
-// Добавление Postgresql
+// Add authentication with JWT Bearer
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["JwtOptions:Issuer"],
+        ValidAudience = builder.Configuration["JwtOptions:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["JwtOptions:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is missing")))
+    };
+});
+
+// Регистрация RabbitMQ
+builder.RegisterRabbitMq();
+
+// Добавление PostgreSQL
 builder.AddPostgres();
 
+// Конфигурируем Serilog
+builder.ConfigureSerilog();
+builder.Host.UseSerilog();
 
-builder.Services.AddApiVersioning(options =>
-{
-    options.DefaultApiVersion = new ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
-    options.ReportApiVersions = true;
-});
-
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Afisha API", Version = "v1" });
-
-    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    //options.IncludeXmlComments(xmlPath);
-});
+// Добавление версионирования API
+builder.AddApiVersioning();
+// Добавление Swagger
+builder.AddSwagger();
 
 var app = builder.Build();
 
@@ -47,14 +64,19 @@ app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
     options.SwaggerEndpoint("/swagger/v1/swagger.json", "Afisha API v1");
-    options.RoutePrefix = string.Empty; // Set the Swagger UI at the root URL
+    options.RoutePrefix = string.Empty;
 });
 
-app.UseHttpsRedirection();
-
+app.UseSerilogRequestLogging();
+app.UseStaticFiles(); // Serve static files (e.g., map.png)
+// Add authentication middleware before authorization
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();
 
-app.Run();
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<AfishaDbContext>();
+db.Database.Migrate();
 
+app.Run();

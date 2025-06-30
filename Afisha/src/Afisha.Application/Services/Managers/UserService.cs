@@ -3,12 +3,11 @@ using Afisha.Application.Specifications.User;
 using Afisha.Domain.Entities;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
+using AutoMapper;
 
 namespace Afisha.Application.Services.Managers
 {
-    // В дальнейшем лучше было бы сделать котроллер/сервис для регистрации пользователя,
-    // сверстать входные и выходные модели, сделать аутентификацию/авторизацию и добавить роли
-    public class UserService(IRepository<User, long> userRepository, IUnitOfWork unitOfWork) : IUserService
+    public class UserService(IRepository<User, long> userRepository, IUnitOfWork unitOfWork, IUserRepository userRep, IMapper mapper) : IUserService
     {
         /// <summary>
         ///  Добавление нового пользователя 
@@ -40,7 +39,7 @@ namespace Afisha.Application.Services.Managers
             {
                 throw new Exception($"Пользователь с идентификатором {id} не найден");
                 // + Логирование
-            }
+            }            
             return user;
         }
 
@@ -59,5 +58,27 @@ namespace Afisha.Application.Services.Managers
             }
             throw new Exception("Не удалось удалить пользователя");
         }
+
+        /// <summary>
+        /// Метод получения пользователя по логину 
+        /// </summary>
+        public async Task<User?> GetUserByLoginAsync(string login, CancellationToken cancellationToken)
+        {
+            login = login.ToLowerInvariant();
+
+            var user = await userRep.GetUserByLoginAsync(login, cancellationToken);
+
+            return user;
+        }
+
+        /// <summary>
+        /// Метод получения пользователя по email
+        /// </summary>
+        public async Task<User?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            var user = await userRep.GetUserByEmailAsync(email, cancellationToken);
+            return user;
+        }
+
     }
 }

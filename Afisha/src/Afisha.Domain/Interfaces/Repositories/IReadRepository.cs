@@ -31,4 +31,7 @@ public interface IReadRepository<T, TKey>
         int pageIndex = 0,
         int pageSize = 20,
         CancellationToken cancellationToken = default);
+
+    Task<int> GetTotalCountAsync(
+        CancellationToken cancellationToken = default);
 }

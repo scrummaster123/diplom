@@ -4,7 +4,7 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <DockerPublishLocally>False</DockerPublishLocally>
-    <ProjectGuid>176a7151-a9bb-4b64-8399-383267699394</ProjectGuid>
+    <ProjectGuid>7f8345e2-2558-40b5-923f-9cba1e2a8b35</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/usersomeaction</DockerServiceUrl>
     <DockerServiceName>afisha.web</DockerServiceName>

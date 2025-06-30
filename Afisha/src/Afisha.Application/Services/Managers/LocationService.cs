@@ -1,6 +1,10 @@
+using Afisha.Application.DTO.Elastics;
+using Afisha.Application.DTO.Inputs;
+using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
 using Afisha.Application.Specifications.Location;
 using Afisha.Domain.Entities;
+using Afisha.Domain.Enums;
 using Afisha.Domain.Interfaces;
 using Afisha.Domain.Interfaces.Repositories;
 
@@ -9,6 +13,7 @@ namespace Afisha.Application.Services.Managers;
 public class LocationService(
     IRepository<Location, long> locationRepository,
     IRepository<User, long> userRepository,
+    IElasticService elasticService,
     IUnitOfWork unitOfWork) : ILocationService
 {
     /// <summary>
@@ -23,17 +28,17 @@ public class LocationService(
 
         if (location == null)
             throw new Exception($"Локация с идентификатором {id} не найдена");
-        
+
         // Маппинг сущности локации из модели
         var outputLocation = new OutputLocationFull
         {
             Name = location.Name,
             Pricing = location.Pricing,
             IsWarmPlace = location.IsWarmPlace,
-            Events =  location.Events?.Select(x => x.DateStart.ToString()).ToList() ?? [],
+            Events = location.Events?.Select(x => x.DateStart.ToString()).ToList() ?? [],
             OwnerId = location.OwnerId
         };
-        
+
         return outputLocation;
     }
 
@@ -72,10 +77,57 @@ public class LocationService(
                 OwnerId = addedLocation.OwnerId
             };
 
+            await elasticService.WriteAsync(new ElasticLocation { Id = addedLocation.Id, Date = addedLocation.Name });
+
             return mappedLocation;
         }
 
         // В случае, если верхний if не отработал, выбрасывается исключение с общим описанием для пользователя
         throw new Exception("Не удалось добавить локацию");
+    }
+
+    public async Task<IEnumerable<OutputLocationBase>> GetBySearchString(string request)
+    {
+        var elasticLocations = await elasticService.GetAsync(request);
+
+        var locations = new List<OutputLocationBase>();
+        foreach (var elasticLocation in elasticLocations)
+        {
+            var location = await GetLocationByIdAsync(elasticLocation.Id, new CancellationToken());
+            locations.Add(location);
+        }
+
+        return locations;
+    }
+
+    public async Task<IEnumerable<OutputLocationBase>> GetLocationsPagedAsync(int page, int pageSize, CancellationToken cancellationToken)
+    {
+        // Пример: получение данных из базы
+        var locations = await locationRepository.GetPagedAsync(new LocationSpecification(),TrackingType.Tracking, page, pageSize,  cancellationToken);
+        return locations.Select(l => new OutputLocationBase
+        {
+            OwnerId = l.OwnerId,
+            Name = l.Name,
+            Pricing = l.Pricing,
+            IsWarmPlace = l.IsWarmPlace
+        });
+    }
+
+    public async Task<int> GetTotalLocationsCountAsync(CancellationToken cancellationToken)
+    {
+        return await locationRepository.GetTotalCountAsync(cancellationToken);
+    }
+
+    public async Task<IReadOnlyCollection<OutputLocationBase>> GetAllAsync(CancellationToken cancellationToken)
+    {
+        var locations = await locationRepository.GetAsync(new LocationSpecification(), TrackingType.Tracking, cancellationToken);
+        Random rnd = new Random();
+        return locations.Select(l => new OutputLocationBase
+        {
+            Id = l.Id,
+            Name = l.Name,
+            XCoordinate = 512 + rnd.Next(-500,500),
+            YCoordinate = 400 + rnd.Next(-380, 380),
+        }).ToList();
     }
 }

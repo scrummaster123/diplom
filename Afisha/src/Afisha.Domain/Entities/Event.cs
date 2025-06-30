@@ -1,18 +1,15 @@
-﻿using Afisha.Domain.Entities.Abstractions;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using Afisha.Domain.Entities.Abstractions;
 
 namespace Afisha.Domain.Entities;
 
 public class Event : EntityBase<long>
 {
-    /// <summary>
-    /// Id пользователя - владельца мероприятия
-    /// </summary>
-    public long SponsorId { get; set; }
 
-    /// <summary>
-    /// Владелец мероприятия
-    /// </summary>
-    public User Sponsor { get; set; }
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public new long Id { get; init; }
 
     /// <summary>
     /// Id места проведения мероприятия
@@ -28,5 +25,7 @@ public class Event : EntityBase<long>
     /// Дата начала мероприятия
     /// </summary>
     public DateOnly DateStart { get; set; }
-   
+
+    public ICollection<EventUser> EventParticipants { get; set; } = [];
+
 }

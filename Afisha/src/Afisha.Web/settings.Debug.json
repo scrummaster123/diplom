@@ -6,10 +6,18 @@
     }
   },
   "Postgres": {
-    "Host": "127.0.0.1",
-    "Port": "5432",
-    "User": "postgres",
-    "Password": "123",
-    "Database": "otus_course"
+    "Host": "",
+    "Port": "",
+    "User": "",
+    "Password": "",
+    "Database": ""
+  },
+  "RabbitMQ":
+  {
+    "Host": "rabbitmqhost",
+    "Port": "5672",
+    "User": "guest",
+    "Password": "guest",
+    "VirtualHost": "/"
   }
 }

@@ -1,4 +1,5 @@
 ﻿using Afisha.Domain.Entities;
+using Afisha.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Afisha.Infrastructure.Data.Seeding;
@@ -24,8 +25,13 @@ internal static class SeederExtension
         );
 
         modelBuilder.Entity<Event>().HasData(
-            new Event { Id = 1, SponsorId = 1, LocationId = 1, DateStart = DateOnly.FromDateTime(DateTime.Now) },
-            new Event { Id = 2, SponsorId = 1, LocationId = 1, DateStart = DateOnly.FromDateTime(DateTime.Now) }
+            new Event { Id = 1, LocationId = 1, DateStart = DateOnly.FromDateTime(DateTime.Now) },
+            new Event { Id = 2, LocationId = 1, DateStart = DateOnly.FromDateTime(DateTime.Now) }
+        );
+
+        modelBuilder.Entity<EventUser>().HasData(
+            new EventUser{Id = 1, UserId = 1, UserRole = EventRole.Organizer, EventId = 1},
+            new EventUser{Id = 2, UserId = 2, UserRole = EventRole.Organizer, EventId = 2}
         );
     }
 }

@@ -36,14 +36,9 @@ namespace Afisha.Infrastructure.Migrations
                     b.Property<long>("LocationId")
                         .HasColumnType("bigint");
 
-                    b.Property<long>("SponsorId")
-                        .HasColumnType("bigint");
-
                     b.HasKey("Id");
 
                     b.HasIndex("LocationId");
-
-                    b.HasIndex("SponsorId");
 
                     b.ToTable("Events");
 
@@ -51,16 +46,56 @@ namespace Afisha.Infrastructure.Migrations
                         new
                         {
                             Id = 1L,
-                            DateStart = new DateOnly(2025, 2, 25),
-                            LocationId = 1L,
-                            SponsorId = 1L
+                            DateStart = new DateOnly(2025, 4, 10),
+                            LocationId = 1L
                         },
                         new
                         {
                             Id = 2L,
-                            DateStart = new DateOnly(2025, 2, 25),
-                            LocationId = 1L,
-                            SponsorId = 1L
+                            DateStart = new DateOnly(2025, 4, 10),
+                            LocationId = 1L
+                        });
+                });
+
+            modelBuilder.Entity("Afisha.Domain.Entities.EventUser", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<long>("EventId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("UserId")
+                        .HasColumnType("bigint");
+
+                    b.Property<int>("UserRole")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("EventUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1L,
+                            EventId = 1L,
+                            UserId = 1L,
+                            UserRole = 1
+                        },
+                        new
+                        {
+                            Id = 2L,
+                            EventId = 2L,
+                            UserId = 2L,
+                            UserRole = 1
                         });
                 });
 
@@ -153,7 +188,6 @@ namespace Afisha.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
@@ -172,7 +206,6 @@ namespace Afisha.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Patronymic")
@@ -211,15 +244,26 @@ namespace Afisha.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Afisha.Domain.Entities.User", "Sponsor")
-                        .WithMany("Events")
-                        .HasForeignKey("SponsorId")
+                    b.Navigation("Location");
+                });
+
+            modelBuilder.Entity("Afisha.Domain.Entities.EventUser", b =>
+                {
+                    b.HasOne("Afisha.Domain.Entities.Event", "Event")
+                        .WithMany("EventParticipants")
+                        .HasForeignKey("EventId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Location");
+                    b.HasOne("Afisha.Domain.Entities.User", "User")
+                        .WithMany("Events")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("Sponsor");
+                    b.Navigation("Event");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Afisha.Domain.Entities.Location", b =>
@@ -250,6 +294,11 @@ namespace Afisha.Infrastructure.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Afisha.Domain.Entities.Event", b =>
+                {
+                    b.Navigation("EventParticipants");
                 });
 
             modelBuilder.Entity("Afisha.Domain.Entities.Location", b =>

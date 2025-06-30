@@ -1,0 +1,108 @@
+﻿version: '3.5'
+
+services:
+  rabbit:
+    image: rabbitmq:3-management
+    hostname: rabbitmqhost
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - myLocalNetwork
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: otus_system
+      POSTGRES_PASSWORD: otus-123@!
+      POSTGRES_DB: otus_course
+    ports:
+      - "5412:5432"
+    networks:
+      - myLocalNetwork
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-U", "otus_system", "-d", "otus_course" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Elasticsearch
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.17.4
+    environment:
+      - discovery.type=single-node
+      - ELASTICSEARCH_USERNAME=elastic
+      - ELASTICSEARCH_PASSWORD=elastic
+      - xpack.security.enabled=false # Отключаем безопасность
+    ports:
+      - "9200:9200"
+    networks:
+      - myLocalNetwork
+    volumes:
+      - es_data:/usr/share/elasticsearch/data
+
+  # Kibana
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.17.4
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - xpack.security.enabled=false # Отключаем безопасность - чтобы не возиться со вставкой токена из elastic
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - myLocalNetwork
+      
+  afisha.web:
+    image: afisha.web
+    build:
+      context: .
+      dockerfile: src/Afisha.Web/Dockerfile
+    networks:
+      - myLocalNetwork
+    depends_on:
+      rabbit:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    environment:
+      RABBITMQ_HOST: rabbitmqhost
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USER: guest
+      RABBITMQ_PASS: guest
+      ASPNETCORE_ENVIRONMENT: Docker
+    ports:
+      - "5182:8080" 
+
+  afisha.notificationservice:
+    image: afisha.notificationservice
+    build:
+      context: .
+      dockerfile: src/Afisha.NotificationService/Dockerfile
+    networks:
+      - myLocalNetwork
+    depends_on:
+      rabbit:
+        condition: service_healthy
+    environment:
+      WORKING_SETTINGS: Docker
+
+
+volumes:
+  rabbitmq_data:
+  es_data:
+
+networks:
+  myLocalNetwork:
+    driver: bridge
