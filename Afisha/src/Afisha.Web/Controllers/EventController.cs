@@ -11,7 +11,7 @@ namespace Afisha.Web.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-[Authorize]
+// [Authorize]
 public class EventController(IEventService eventService) : ControllerBase
 {
     [HttpGet("{id}")]

@@ -27,7 +27,7 @@ public interface IEventService
     ///     Регистрация на мероприятие
     /// </summary>
     /// <param name="eventId">Идентификатор мероприятия</param>
-    /// <param name="userEmail">Почта пользователя, который хочет зарегистрироваться</param>
+    /// <param name="userId">ID пользователя, который хочет зарегистрироваться</param>
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>True - удалось зарегистрироваться. False - регистрация не удалась</returns>
     Task<Message> RegisterToEventAsync(long eventId, long userId, CancellationToken cancellationToken);

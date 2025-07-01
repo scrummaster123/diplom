@@ -21,6 +21,8 @@ namespace Afisha.Application.Services.Interfaces.Auth
             var token = new JwtSecurityToken(
                 claims: claims,
                 signingCredentials: signingCredentials,
+                audience: "AfishaAudience",
+                issuer: "AfishaIssuer",
                 expires: DateTime.UtcNow.AddHours(_options.ExpitesHours)
                 );
 
