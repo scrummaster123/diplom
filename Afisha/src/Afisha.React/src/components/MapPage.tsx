@@ -78,7 +78,7 @@ const MapPage: React.FC = () => {
         name: eventForm.name,
         organizer: eventForm.organizer,
         locationId: selectedLocation.id,
-        date: eventForm.date,
+        dateStart: eventForm.date,
       });
       setError(null);
       setSelectedLocation(null);

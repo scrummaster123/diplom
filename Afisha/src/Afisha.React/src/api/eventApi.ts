@@ -48,8 +48,8 @@ export const eventApi = {
     name: string;
     organizer: string;
     locationId: number;
-    date: string;
+    dateStart: string;
   }): Promise<void> => {
-    await api.post('/Event/create', event);
+    await api.post('/Event/create-map', event);
   },
 };

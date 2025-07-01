@@ -35,6 +35,22 @@ public class EventController(IEventService eventService, IPublishEndpoint pub) :
         return Ok("Событие создано");
     }
 
+    [HttpPost]
+    [Route("create-map")]
+    [Authorize]
+    public async Task<IActionResult> CreateOnMapEvent([FromBody] CreateEvent createEvent)
+    {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+        if (userIdClaim == null || !long.TryParse(userIdClaim.Value, out long userId))
+        {
+            return Unauthorized("User ID not found in token");
+        }
+        createEvent.SponsorId = userId;
+        await eventService.CreateEvent(createEvent, HttpContext.RequestAborted);
+
+        return Ok("Событие создано");
+    }
+
     [HttpGet]
     [Route("filtered-events")]
     public async Task<IActionResult> GetEventsByFilter([FromQuery] DateOnly dateStart, [FromQuery] DateOnly dateEnd,

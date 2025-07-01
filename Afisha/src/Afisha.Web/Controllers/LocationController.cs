@@ -58,7 +58,7 @@ public class LocationController(ILocationService locationService, IServiceProvid
     {
         return Ok(new
         {
-            MapUrl = "images/map.jpg",
+            MapUrl = "/images/map.jpg",
             MapWidth = 1024, // Pixel width of map.png
             MapHeight = 800 // Pixel height of map.png
         });
