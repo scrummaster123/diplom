@@ -1,6 +1,7 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
+using Afisha.Application.Services.Managers.EventRegistration;
 
 namespace Afisha.Application.Services.Interfaces;
 
