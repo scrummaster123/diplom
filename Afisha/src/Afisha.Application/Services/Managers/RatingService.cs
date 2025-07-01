@@ -20,11 +20,8 @@ public class RatingService(
         var user = await userRepository.GetByIdAsync(ratingDto.UserId);
         var myEvent = await eventRepository.GetByIdAsync(ratingDto.EventId);
 
-        if (user is null)
-            throw new ArgumentNullException(nameof(user));
-
-        if (myEvent is null)
-            throw new ArgumentNullException(nameof(myEvent));
+        ArgumentNullException.ThrowIfNull(user, nameof(user));
+        ArgumentNullException.ThrowIfNull(myEvent, nameof(myEvent));
 
         var rating = ratingRepository.Add(new Rating()
         {

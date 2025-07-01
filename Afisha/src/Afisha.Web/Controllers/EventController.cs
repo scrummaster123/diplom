@@ -35,6 +35,8 @@ public class EventController(IEventService eventService) : ControllerBase
     public async Task<ActionResult<List<OutputEvent>>> GetEventsByFilter([FromQuery] DateOnly? dateStart, [FromQuery] DateOnly? dateEnd,
         [FromQuery] long? locationId, [FromQuery] long? sponsorId, [FromQuery] OrderByEnum orderBy = OrderByEnum.Default)
     {
+        eventService.IncrementViewCount();
+
         var events = await eventService.GetEventsByFilterAsync(dateStart, dateEnd, HttpContext.RequestAborted,
             locationId, sponsorId, orderBy);
 

@@ -19,4 +19,11 @@ public interface ILocationService
     ///     Создание новой локации
     /// </summary>
     Task<List<OutputLocationBase>> GetLocations(CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Поиск локаций в Elastic по примерному описанию
+    /// </summary>
+    /// <param name="search"></param>
+    /// <returns></returns>
+    Task<IEnumerable<OutputLocationBase>> GetBySearchString(string search);
 }

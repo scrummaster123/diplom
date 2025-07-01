@@ -1,1 +1,28 @@
-﻿name: CI-CD
+name: .NET Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore Afisha/Afisha.Tests/Afisha.Tests.csproj
+
+    - name: Build solution
+      run: dotnet build Afisha/Afisha.Tests/Afisha.Tests.csproj --no-restore
+
+    - name: Run Afisha.Tests tests
+      run: dotnet test Afisha/Afisha.Tests/Afisha.Tests.csproj --no-build --verbosity normal

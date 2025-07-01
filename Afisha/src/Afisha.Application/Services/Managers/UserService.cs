@@ -15,7 +15,7 @@ namespace Afisha.Application.Services.Managers
         public async Task<User> AddUserAsync(User user, CancellationToken cancellationToken)
         {
             var existingUser = await userRepository.GetAsync(new UserByLoginSpecification(user.Login), cancellationToken: cancellationToken);
-            if (existingUser is not null)
+            if (existingUser.Length > 0)
                 throw new Exception("Пользователь с таким логином уже существует");
 
             var addedUser = userRepository.Add(user);

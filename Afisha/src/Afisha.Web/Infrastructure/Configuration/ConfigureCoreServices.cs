@@ -28,6 +28,7 @@ public static class ConfigureCoreServices
         services.AddScoped(typeof(IReadRepository<,>), typeof(ReadRepository<,>));
         services.AddScoped(typeof(IRepository<,>), typeof(Repository<,>));
         services.AddScoped<ILocationService, LocationService>();
+        services.AddScoped<IElasticService, ElasticService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IEventService, EventService>();

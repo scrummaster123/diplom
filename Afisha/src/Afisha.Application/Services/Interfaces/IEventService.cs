@@ -1,7 +1,6 @@
 ﻿using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Enum;
-using Afisha.Application.Services.Managers.EventRegistration;
 
 namespace Afisha.Application.Services.Interfaces;
 
@@ -31,4 +30,10 @@ public interface IEventService
     /// <param name="cancellationToken">Токен отмены</param>
     /// <returns>True - удалось зарегистрироваться. False - регистрация не удалась</returns>
     Task<Message> RegisterToEventAsync(long eventId, long userId, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Потокобезопасное обновление счётчика фильтрации мероприятий
+    /// </summary>
+    /// <returns></returns>
+    void IncrementViewCount();
 }

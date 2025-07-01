@@ -28,6 +28,9 @@ public class EventService(
     ILogger<EventService> logger,
     IPublishEndpoint rabbitService) : IEventService
 {
+    private int _viewCount;
+    private readonly object _lock = new object();
+
     public async Task CreateEvent(CreateEvent createEvent, CancellationToken cancellationToken)
     {
         var config = autoMapperConfiguration.Configure();
@@ -129,6 +132,14 @@ public class EventService(
         if (sponsor is not null)
             outputEvent.Sponsor = iMapper.Map<User, OutputEventUser>(sponsor);
         return outputEvent;
+    }
+
+    public void IncrementViewCount()
+    {
+        lock (_lock)
+        {
+            _viewCount++;
+        }
     }
 
     private List<OutputEvent> OrderBy(List<OutputEvent> events, OrderByEnum orderByEnum)

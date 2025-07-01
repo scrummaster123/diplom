@@ -1,3 +1,4 @@
+using Afisha.Application.DTO.Elastics;
 using Afisha.Application.DTO.Inputs;
 using Afisha.Application.DTO.Outputs;
 using Afisha.Application.Services.Interfaces;
@@ -12,6 +13,7 @@ namespace Afisha.Application.Services.Managers;
 public class LocationService(
     IRepository<Location, long> locationRepository,
     IRepository<User, long> userRepository,
+    IElasticService elasticService,
     IUnitOfWork unitOfWork,
     ILocationRepository locationRepo, IMapper mapper) : ILocationService
 {
@@ -76,11 +78,27 @@ public class LocationService(
                 OwnerId = addedLocation.OwnerId
             };
 
+            await elasticService.WriteAsync(new ElasticLocation { Id = addedLocation.Id, Date = addedLocation.Name });
+
             return mappedLocation;
         }
 
         // В случае, если верхний if не отработал, выбрасывается исключение с общим описанием для пользователя
         throw new Exception("Не удалось добавить локацию");
+    }
+
+    public async Task<IEnumerable<OutputLocationBase>> GetBySearchString(string request)
+    {
+        var elasticLocations = await elasticService.GetAsync(request);
+
+        var locations = new List<OutputLocationBase>();
+        foreach (var elasticLocation in elasticLocations)
+        {
+            var location = await GetLocationByIdAsync(elasticLocation.Id, new CancellationToken());
+            locations.Add(location);
+        }
+
+        return locations;
     }
 
     public async Task<List<OutputLocationBase>> GetLocations(CancellationToken cancellationToken)
